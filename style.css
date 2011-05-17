@@ -1,0 +1,60 @@
+body {
+	font-family: 'tahoma';	
+	font-size: 12px;
+}
+
+.textbox {
+	padding: 2px 2px 4px 2px;
+	cursor: text;
+	border: 1px solid;
+	width: 300px;
+	overflow: hidden;	
+}
+
+.container {
+
+}
+
+.wrapper {
+	margin: 5px 3px 3px 3px;
+	display: block;
+	float: left;
+	position: relative;
+	overflow: hidden;	
+}
+
+.innerWrapper {
+
+}
+
+.inputtext {
+	border: 0px;	
+	width: 100%;
+	padding: 3px;
+}
+
+.item {
+	background: none repeat scroll 0 0 #E2E6F0;
+	float: left;
+	top: 2px;
+	position: relative;
+	display: block;
+	margin: 3px;
+	padding: 3px;
+	border: 1px solid;
+	white-space: nowrap;
+	outline: 2px solid #6374AB
+}
+
+.remove-item {
+	
+	line-height: 10px;
+	padding: 0 3px 2px;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 0 -2px 3px;
+	outline: medium none;	
+}
