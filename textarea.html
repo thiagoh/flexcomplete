@@ -1,5 +1,5 @@
 
-<script src="jquery-1.6.1.js"></script>
+<script src="jquery-1.7.2.js"></script>
 <script src="flexcomplete.js"></script>
 
 <script type="text/javascript">
@@ -32,6 +32,14 @@ $(function(){
 				
 				input.value = '';
 			},
+			filter : 
+                function(data, input) {
+					input = jQuery(input);
+					var re = new RegExp(input.val().replace($.fn.flexcomplete.reReplace, ''), "i");
+					return jQuery(data).filter(function(i) {
+							return re.test(data[i].replace($.fn.flexcomplete.reReplace, ''));
+						}); 
+				},
 			data : [
 					'thiago andrade', 'bruno henrique', 
 					'walter august', 'breno nunes', 
