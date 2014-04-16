@@ -1,4 +1,14 @@
-(function($) {
+/*!
+ * FlexComplete JavaScript Library v1.0.5
+ * https://github.com/thiagoh/flexcomplete
+ *
+ * Copyright 2014, Thiago Andrade
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Requires jQuery 1.6+.js
+ *
+ * Date: Wed Apr 16 16:48:34 2014 -0300
+ */(function($) {
 	
 	var PROP_NAME = 'jAutoComplete.instance';
 	var DIV_CONTEUDO_NAME = 'jAutoComplete.instance.divConteudo';
