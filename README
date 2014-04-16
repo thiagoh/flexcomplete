@@ -1,41 +1,42 @@
+Flex complete usage 
 
-<script src="jquery-1.7.2.js"></script>
-<script src="flexcomplete-1.0.5.js"></script>
+	<script src="jquery-1.7.2.js"></script>
+	<script src="flexcomplete-1.0.5.js"></script>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 
-$(function(){
+	$(function(){
 
-	$('#id').flexcomplete(
-		{
-			width: 300,
-			method : 'POST',
-			showTooltip : true,
-			onSelect : function(val, input) {
-			
-				// do something when item is selected
-			},
-			getLine : function(data) {
+		$('#id').flexcomplete(
+			{
+				width: 300,
+				method : 'POST',
+				showTooltip : true,
+				onSelect : function(val, input) {
 				
-				return data;
-			},
-			data : [
-					'thiago andrade', 'bruno henrique', 
-					'walmor cesar', 'breno nunes', 
-					'd\'alia', 'toto-tata', 
-					'jogo#velha', 'email@email.com',
-					'antonio braga', 'carlos leite',
-					'paulo amorim', 'raphael praxedes',
-					'thiago souza', 'thiago leite',
-					'thiago cavalcanti', 'thiago ferreira',
-					'thiago braga', 'thiago castro',
-					'thiago lima', 'thiago aragão',
-					'thiago alencar', 'thiago assis',
-					'hugo fernando', 'danilo lima',
-					'ronaldo nobrega', 'kleber xavier',
-					'andré barros', 'roberta almeida'
-					]
-		});
+					// do something when item is selected
+				},
+				getLine : function(data) {
+					
+					return data;
+				},
+				data : [
+						'thiago andrade', 'bruno henrique', 
+						'walmor cesar', 'breno nunes', 
+						'd\'alia', 'toto-tata', 
+						'jogo#velha', 'email@email.com',
+						'antonio braga', 'carlos leite',
+						'paulo amorim', 'raphael praxedes',
+						'thiago souza', 'thiago leite',
+						'thiago cavalcanti', 'thiago ferreira',
+						'thiago braga', 'thiago castro',
+						'thiago lima', 'thiago aragão',
+						'thiago alencar', 'thiago assis',
+						'hugo fernando', 'danilo lima',
+						'ronaldo nobrega', 'kleber xavier',
+						'andré barros', 'roberta almeida'
+						]
+			});
 
-});
-</script>
+	});
+	</script>
