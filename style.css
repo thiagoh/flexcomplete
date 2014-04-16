@@ -58,3 +58,17 @@ body {
 	margin: 0 0 -2px 3px;
 	outline: medium none;	
 }
+
+#idDataContainer {
+    border: 1px solid;
+    border-radius: 5px;
+    display: block;
+    height: 320px;
+    width: 362px;
+}
+
+#idDataContainer > div {
+	float: left;
+	width: 160px;
+	padding: 2px;
+}

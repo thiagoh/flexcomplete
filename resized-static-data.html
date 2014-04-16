@@ -1,6 +1,5 @@
-
 <script src="jquery-1.7.2.js"></script>
-<script src="flexcomplete.js"></script>
+<script src="flexcomplete-1.0.5.js"></script>
 
 <script type="text/javascript">
 
@@ -11,8 +10,8 @@ $(function(){
 			$('#id').focus();
 		});
 	
-	$('#id').flexcomplete(
-		{
+	$('#id').flexcomplete({
+
 			width: 300,
 			method : 'POST',
 			showTooltip : true,
@@ -20,16 +19,18 @@ $(function(){
 			
 				var self = this;
 				
-				self.data(jQuery.grep(self.data(), function(e){ return val != e;}));
+				self.sdata(jQuery.grep(self.sdata(), function(e){ return val != e;}));
 				
 				var item = $("<span class='item'>" + val + "<span class='remove-item'>x</span></span>")
 					.find('.remove-item')
 					.click(function(){
 						item.remove();
-						self.data().push(val);
+						self.sdata().push(val);
+						window.updateData();
 					}).end();
 				$('#container').append(item);
 				
+				window.updateData();
 				input.value = '';
 			},
 			getLine : function(data) {
@@ -62,6 +63,31 @@ $(function(){
 					]
 		});
 
+	window.updateData = function() {
+
+		var data = $('#id').flexcomplete('sdata');
+		var dataContainer = $('#idDataContainer').html('');
+
+		for (var i in data) {
+
+			dataContainer.append('<div>' + data[i] + '</div>');
+		}
+	}
+
+	$('#idAddDataButton').click(function() {
+
+		var v = $('#idAddData').val();
+
+		if ($.trim(v) == '')
+			return;
+
+		$('#id').flexcomplete('sdata').push(v);
+
+		$('#idAddData').val('');
+		updateData();
+	});
+
+	updateData();
 });
 </script>
 
@@ -73,31 +99,18 @@ $(function(){
 <h3>Flexcomplete</h3>
 
 <h4>
-O array de dados é 
-<pre>
-
-			data : [
-					'thiago andrade', 'bruno henrique', 
-					'walter august', 'breno nunes', 
-					'd\'alia', 'toto-tata', 
-					'jogo#velha', 'email@email.com',
-					'antonio braga', 'carlos leite',
-					'paulo amorim', 'raphael praxedes',
-					'thiago souza', 'thiago leite',
-					'thiago cavalcanti', 'thiago ferreira',
-					'thiago braga', 'thiago castro',
-					'thiago lima', 'thiago aragão',
-					'thiago alencar', 'thiago assis',
-					'hugo fernando', 'danilo lima',
-					'ronaldo nobrega', 'manoel amorim',
-					'andré barros', 'roberta almeida'
-					]
-
-</pre>
+The data array is 
 </h4>
 
+<div id="idDataContainer"></div>
+
+<div>
+	<input id="idAddData" type="text" class="add-data" autocomplete="off" />
+	<input id="idAddDataButton" type="button" value="Add" />
+</div>
+
 <h4>
-Teste digitar algumas coisas. O flexcomplete vem como padrão iniciar a busca a partir de 3 caracteres (o que pode ser customizado).
+Try typing some sequences that match with any names from the array. On this example the FlexComplete starts searching once you type any sequence with at least three characters (you can customize it). Ex.: try typing "thi".  On this example you cannot add duplicate items into the container.
 </h4>
 
 <div id="textbox" class="textbox">

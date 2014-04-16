@@ -10,10 +10,10 @@
  * Date: Wed Apr 16 16:48:34 2014 -0300
  */(function($) {
 	
-	var PROP_NAME = 'jAutoComplete.instance';
-	var DIV_CONTEUDO_NAME = 'jAutoComplete.instance.divConteudo';
+	var PROP_INSTANCE_NAME = '_fnflexcomplete.instance';
+	var PROP_DATA_NAME = '_fnflexcomplete.data';
 	
-	function jAutoComplete() {
+	function _fnflexcomplete() {
 		
 		var inst = this;
 		
@@ -114,7 +114,7 @@
 		this.target = map.target;	
 	};
 	
-	$.extend(jAutoComplete.prototype, {
+	$.extend(_fnflexcomplete.prototype, {
 		
 		extend : function(o) {
 			
@@ -143,25 +143,61 @@
 			inst._arrayFather = [];
 			inst._fatherIndex = -1;
 			
-			if (inst._input.data(PROP_NAME) == undefined )
-				inst._input.data(PROP_NAME, this);
+			if (inst._input.data(PROP_INSTANCE_NAME) == undefined )
+				inst._input.data(PROP_INSTANCE_NAME, this);
 			
 			inst._input
 				.keyup(
 					function(e) {
-						$.jAutoComplete._schedule.apply(inst, [e]);
+						
+						try {
+
+							$._fnflexcomplete._schedule.apply(inst, [e]);
+
+						} catch(ex) {
+										
+							if (console)
+								console.error(ex);
+						}
 					})
 				.keydown(
 					function(e) {
-						$.jAutoComplete._forwardNavigation.apply(inst, [e]);
+
+						try {
+
+							$._fnflexcomplete._forwardNavigation.apply(inst, [e]);
+
+						} catch(ex) {
+										
+							if (console)
+								console.error(ex);
+						}
 					})
 				.focus(
 					function(e) {
-						$.jAutoComplete._gainFocus.apply(inst, [e]);
+						
+						try {
+
+							$._fnflexcomplete._gainFocus.apply(inst, [e]);
+
+						} catch(ex) {
+										
+							if (console)
+								console.error(ex);
+						}
 					})
 				.blur(
 					function(e) {
-						$.jAutoComplete._looseFocus.apply(inst, [e]);
+						
+						try {
+
+							$._fnflexcomplete._looseFocus.apply(inst, [e]);
+
+						} catch(ex) {
+										
+							if (console)
+								console.error(ex);
+						}
 					});
 			
 			inst._onLoad();
@@ -346,7 +382,7 @@
 			
 			if (inst._arrayFather.length == 1 && inst._selectIfOneResult == true) {
 				
-				inst._onSelect(inst._arrayFather[0].data(DIV_CONTEUDO_NAME), inst._input.get(0));
+				inst._onSelect(inst._arrayFather[0].data(PROP_DATA_NAME), inst._input.get(0));
 				
 				if (inst.isOpened())
 					inst.close();
@@ -387,8 +423,8 @@
 					divLine.attr('title', inst._getFullText(obj)).tooltip({showURL: false, delay : 80});
 				
 				inst._arrayFather[i] = $("<div align='left' class='flexcomplete-line-common'></div>")
-					.data(DIV_CONTEUDO_NAME, obj)
-					.data(PROP_NAME, inst)
+					.data(PROP_DATA_NAME, obj)
+					.data(PROP_INSTANCE_NAME, inst)
 					.append(divLine)
 					.mousedown(inst.choosingClick)
 					.mouseover(inst.mouseOver)
@@ -465,7 +501,7 @@
 				} else if (key == v.KEY_ENTER) { 
 		
 					if (inst._fatherIndex >= 0)
-						inst._onSelect(inst._arrayFather[inst._fatherIndex].data(DIV_CONTEUDO_NAME), inst._input.get(0)); 
+						inst._onSelect(inst._arrayFather[inst._fatherIndex].data(PROP_DATA_NAME), inst._input.get(0)); 
 					
 					if (inst.isOpened())
 						inst.close();
@@ -475,7 +511,7 @@
 			}
 			
 			if (inst._autoReplacing == true && inst._fatherIndex >= 0 && inst._arrayFather.length >= 1)
-				inst._input.val(inst._getInputValue(inst._arrayFather[inst._fatherIndex].data(DIV_CONTEUDO_NAME)));
+				inst._input.val(inst._getInputValue(inst._arrayFather[inst._fatherIndex].data(PROP_DATA_NAME)));
 		
 			inst.open();
 		},
@@ -489,9 +525,9 @@
 			if (!el.hasClass("flexcomplete-line-common"))
 				el = el.parents("div.flexcomplete-line-common");
 			
-			var inst = el.data(PROP_NAME);
+			var inst = el.data(PROP_INSTANCE_NAME);
 		
-			inst._onSelect(el.data(DIV_CONTEUDO_NAME), inst._input.get(0));
+			inst._onSelect(el.data(PROP_DATA_NAME), inst._input.get(0));
 			
 			if (inst.isOpened())
 				inst.close();
@@ -524,13 +560,6 @@
 		_gainFocus : function(event) {
 		
 			this._schedule(createEvent(event));
-		},
-		
-		data : function(d) {
-			
-			if (d) this._data = d;				
-
-			return this._data;
 		},
 		
 		setStatus : function(status) {
@@ -577,7 +606,14 @@
 									ascii : $.fn.flexcomplete._variables.KEY_DO_SEARCH
 							}));
 		},
-		
+
+		sdata : function(d) {
+			
+			if (d) this._data = d;				
+
+			return this._data;
+		},
+
 		unload : function() {
 			
 			var inst = this;
@@ -591,7 +627,7 @@
 				inst._input.unbind('focus', inst._gainFocus);
 				inst._input.unbind('blur', inst._looseFocus);
 				inst._father.remove();
-				inst._input.removeData(PROP_NAME);
+				inst._input.removeData(PROP_INSTANCE_NAME);
 				
 			} catch(e) {}
 			
@@ -601,17 +637,42 @@
 	
 	$.fn.flexcomplete = function(options) {
 		
-		if ( $.isFunction(this.each) ) {
+		if ($.isFunction(this.each)) {
 		
-			var inst = $(this).data(PROP_NAME);
-			
-			if (typeof options == 'string' && inst != undefined) {
+			var inst = $(this).data(PROP_INSTANCE_NAME);
+
+			if (!inst) {
+
+				return this.each(function() {
+					
+					if ( inst == undefined ) {
+					
+						var inst = new _fnflexcomplete();
+						
+						inst._input = $(this);
+						
+						var opt = {};
+											
+						$.each(options, function(i, item) {
+							opt["_" + i] = item; 
+						});
+						
+						inst.load(opt);
+						
+						$(this).data(PROP_INSTANCE_NAME, inst);
+					}
+					
+					return this;
+				});
+			}
+
+			if (typeof options == 'string') {
 				
 				var otherArgs = Array.prototype.slice.call(arguments, 1);
 				
-				if (options == 'close' || options == 'search' || options == 'select' || options == 'unload') {
+				if (options == 'close' || options == 'search' || options == 'select' || options == 'unload' || options == 'sdata') {
 					
-					return $.jAutoComplete[options].apply($(this).data(PROP_NAME), otherArgs);
+					return $._fnflexcomplete[options].apply(inst, otherArgs);
 					
 				} else if (options == 'extend') {
 					
@@ -623,31 +684,9 @@
 						opt["_" + i] = item; 
 					});					
 					
-					return $.jAutoComplete[options].apply($(this).data(PROP_NAME), [opt]);
+					return $._fnflexcomplete[options].apply(inst, [opt]);
 				}
 			} 
-					
-			return this.each(function() {
-				
-				if ( $(this).data(PROP_NAME) == undefined ) {
-				
-					var inst = new jAutoComplete();
-					
-					inst._input = $(this);
-					
-					var opt = {};
-										
-					$.each(options, function(i, item) {
-						opt["_" + i] = item; 
-					});					
-					
-					inst.load(opt);
-					
-					$(this).data(PROP_NAME, inst);
-				}
-				
-				return this;
-			});
 		}
 	};
 	
@@ -657,8 +696,8 @@
 		
 			return this.each(function() {
 			
-				if ($(this).data(PROP_NAME)) 
-					$(this).data(PROP_NAME).unload();
+				if ($(this).data(PROP_INSTANCE_NAME)) 
+					$(this).data(PROP_INSTANCE_NAME).unload();
 					
 				return this;
 			});
@@ -689,6 +728,6 @@
 			RUNNABLE : 1
 	};
 	
-	$.jAutoComplete = new jAutoComplete();
+	$._fnflexcomplete = new _fnflexcomplete();
 	
 })(jQuery);

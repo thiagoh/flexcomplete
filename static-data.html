@@ -1,0 +1,99 @@
+
+<script src="jquery-1.7.2.js"></script>
+<script src="flexcomplete-1.0.5.js"></script>
+
+<script type="text/javascript">
+
+$(function(){
+
+	$('#textbox').click(
+		function(){
+			$('#id').focus();
+		});
+	
+	$('#id').flexcomplete({
+
+			width: 300,
+			method : 'POST',
+			showTooltip : true,
+			onSelect : function(val, input) {
+			
+				var self = this;
+				
+				var item = $("<span class='item'>" + val + "<span class='remove-item'>x</span></span>")
+					.find('.remove-item').click(function(){
+						item.remove();
+					}).end();
+
+				$('#container').append(item);
+				
+				input.value = '';
+			},
+			getLine : function(data) {
+
+				return data;
+			},
+			filter : 
+                function(data, input) {
+					input = jQuery(input);
+					var re = new RegExp(input.val().replace($.fn.flexcomplete.reReplace, ''), "i");
+					return jQuery(data).filter(function(i) {
+							return re.test(data[i].replace($.fn.flexcomplete.reReplace, ''));
+						}); 
+				},
+			data : [
+					'thiago andrade', 'bruno henrique', 
+					'walmor cesar', 'breno nunes', 
+					'd\'alia', 'toto-tata', 
+					'jogo#velha', 'email@email.com',
+					'antonio braga', 'carlos leite',
+					'paulo amorim', 'raphael praxedes',
+					'thiago souza', 'thiago leite',
+					'thiago cavalcanti', 'thiago ferreira',
+					'thiago braga', 'thiago castro',
+					'thiago lima', 'thiago aragão',
+					'thiago alencar', 'thiago assis',
+					'hugo fernando', 'danilo lima',
+					'ronaldo nobrega', 'kleber xavier',
+					'andré barros', 'roberta almeida'
+					]
+		});
+	
+	var data = $('#id').flexcomplete('sdata');
+	var dataContainer = $('#idDataContainer').html('');
+
+	for (var i in data) {
+
+		dataContainer.append('<div>' + data[i] + '</div>');
+	}
+});
+</script>
+
+<link rel="stylesheet" href="flexcomplete.css" />
+<link rel="stylesheet" href="style.css" />
+
+<body>
+
+<h3>Flexcomplete</h3>
+
+<h4>
+The data array is 
+</h4>
+
+<div id="idDataContainer"></div>
+
+<h4>
+Try typing some sequences that match with any names from the array. On this example the FlexComplete starts searching once you type any sequence with at least three characters (you can customize it). Ex.: try typing "thi". On this example you can add to the container equal items.
+</h4>
+
+<div id="textbox" class="textbox">
+	<div id="container" class="container"></div>
+	<div class="wrapper">
+		<div class="innerWrapper">
+			<input id="id" type="text" class="inputtext" size="1" autocomplete="off" />
+		</div>
+	</div>
+	
+</div>
+
+</body>
