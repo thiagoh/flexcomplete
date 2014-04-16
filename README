@@ -1,4 +1,9 @@
 
+<<<<<<< HEAD
+=======
+Flexcomplete usage
+
+>>>>>>> db1d0d981894767d25310561f0a4166c8d2df9b6
 <script src="jquery-1.7.2.js"></script>
 <script src="flexcomplete.js"></script>
 
@@ -32,10 +37,13 @@ $(function(){
 				
 				input.value = '';
 			},
+<<<<<<< HEAD
 			getLine : function(data) {
 				
 				return data;
 			},
+=======
+>>>>>>> db1d0d981894767d25310561f0a4166c8d2df9b6
 			filter : 
                 function(data, input) {
 					input = jQuery(input);
@@ -46,7 +54,11 @@ $(function(){
 				},
 			data : [
 					'thiago andrade', 'bruno henrique', 
+<<<<<<< HEAD
 					'walmor cesar', 'breno nunes', 
+=======
+					'walter august', 'breno nunes', 
+>>>>>>> db1d0d981894767d25310561f0a4166c8d2df9b6
 					'd\'alia', 'toto-tata', 
 					'jogo#velha', 'email@email.com',
 					'antonio braga', 'carlos leite',
@@ -57,7 +69,11 @@ $(function(){
 					'thiago lima', 'thiago aragão',
 					'thiago alencar', 'thiago assis',
 					'hugo fernando', 'danilo lima',
+<<<<<<< HEAD
 					'ronaldo nobrega', 'kleber xavier',
+=======
+					'ronaldo nobrega', 'manoel amorim',
+>>>>>>> db1d0d981894767d25310561f0a4166c8d2df9b6
 					'andré barros', 'roberta almeida'
 					]
 		});
@@ -110,4 +126,8 @@ Teste digitar algumas coisas. O flexcomplete vem como padrão iniciar a busca a 
 	
 </div>
 
+<<<<<<< HEAD
 </body>
+=======
+</body>
+>>>>>>> db1d0d981894767d25310561f0a4166c8d2df9b6
