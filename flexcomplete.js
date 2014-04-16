@@ -9,15 +9,13 @@
 		
 		this._input = null;
 		this._showTooltip = false;
-		this._getFulltext = null;
 		this._processInput = null;
+		this._getLine = null;
+		this._getFullText = null;
 		this._onLoad = null;
 		this._onUnload = null;
 		this._onSelect = null;
 		this._onClose = null;
-		this._processLine = null;
-		this._posProcessLine = null;
-		this._processLineRight = null;
 		this._getInputValue = null;
 		this._filter = null; //
 		/*
@@ -56,8 +54,6 @@
 			
 			_queryVar : "q",
 			_method : "GET",
-			_getFulltext : 
-				function() { return ''},  
 			_processInput : 
 				function(value) { return value },
 			_onSelect : 
@@ -70,16 +66,12 @@
 				function() {},
 			_onClose :
 				function() {},
-			_processLine : 
-				function(value) { return value },
-			_posProcessLine : 
-					function(elem, value) {  },
-			_processLineRight : 
-				function(value) { return ""},
+			_getFullText : 
+				function(obj) { return obj },
 			_getInputValue : 
 				function(value) { return value },
 			_status : $.fn.flexcomplete._variables.RUNNABLE,
-			_delay : 600,
+			_delay : 300,
 			_jump : 6,
 			_startIn : 3,
 			_width : null,
@@ -105,12 +97,6 @@
 						});
 	};
 	
-	var DivConteudo = function(map, classe) {
-
-		this.classe = classe;
-		this.map = map;
-	};
-	
 	var jAutoCompleteEvent = function(map) {
 		
 		this.type = map.type;
@@ -130,7 +116,15 @@
 			$.extend(this, this._defaults, o);
 			
 			var inst = this;
+
+			if (!inst._getLine) 
+				throw new Error("You must provide a getLine implementation");
 			
+			inst._staticDataSearch = inst._data != null;
+			
+			if (!inst._staticDataSearch && (!inst._url || $.trim(inst._url) == ''))
+				throw new Error("No database set"); 
+
 			var position = this._input.offset();
 			var altura = this._input.outerHeight();
 			
@@ -159,11 +153,6 @@
 					function(e) {
 						$.jAutoComplete._looseFocus.apply(inst, [e]);
 					});
-			
-			inst._staticDataSearch = inst._data != null;
-			
-			if (!inst._staticDataSearch && (inst._url == null || $.trim(inst._url) == ''))
-				throw new Error("No database set"); 
 			
 			inst._onLoad();
 			
@@ -287,12 +276,22 @@
 							success 	: 
 								function(data, status) { 
 								
-									inst._onFilter(data);
-								
-									if (inst._showDefaultResults)
-										inst._drawFather(data); 
+									try {
+
+										inst._onFilter(data);
+									
+										if (inst._showDefaultResults)
+											inst._drawFather(data); 
+											
+										inst._scheduler.executed = true;
+
+									} catch(e) {
 										
-									inst._scheduler.executed = true;
+										if (console)
+											console.error(e);
+
+										throw e;
+									}
 								},
 							error 		: 
 								function(xmlHttpRequest) {
@@ -326,7 +325,7 @@
 			if (filteredData && filteredData.length) {
 				
 				for(var i = 0, leni = filteredData.length; i < leni; i++)
-					inst._arrayFather.push(new DivConteudo(filteredData[i], "flexcomplete-line"));
+					inst._arrayFather.push(filteredData[i]);
 				
 				inst._father.css({visibility : "visible"});
 				
@@ -337,11 +336,26 @@
 			
 			if (inst._arrayFather.length == 1 && inst._selectIfOneResult == true) {
 				
-				inst._onSelect(inst._arrayFather[0].data(DIV_CONTEUDO_NAME).map, inst._input.get(0));
+				inst._onSelect(inst._arrayFather[0].data(DIV_CONTEUDO_NAME), inst._input.get(0));
 				
 				if (inst.isOpened())
 					inst.close();
 			}
+		},
+
+		reMap : {},
+
+		_matchText : function(re, inputValue) {
+
+			var inst = this;
+
+			if (!inputValue || $.trim(inputValue) == '')
+				return inst._getFullText(obj);
+
+			if (!inst.reMap[inputValue]) 
+				inst.reMap[inputValue] = new RegExp("(" + inputValue.replace(/([\]^\${}|+().\[\\])/g, '\\$1') + ")", "ig");
+
+			return inst._getFullText(obj).replace(inst.reMap[inputValue], "<span class='flexcomplete-matched'>$1</span>");
 		},
 		
 		_drawChilds : function() {
@@ -351,27 +365,21 @@
 			
 			var val = inst._input.val();
 			
-			var re = new RegExp("(" + val.replace(/([\]^\${}|+().\[\\])/g, '\\$1') + ")", "ig");
-			
 			for(var i = 0; i < inst._arrayFather.length; i++) {
 			
-				var map = inst._arrayFather[i].map;
+				var obj = inst._arrayFather[i];
 			
-				var l1 = $("<div class='flexcomplete-line-left'>" + inst._processLine(map, val).replace(re, "<span class='flexcomplete-filtro'>$1</span>") + "</div>");
-				
-				inst._posProcessLine(l1, map, val);
-				
-				var l2 = $("<div class='flexcomplete-line-right'>" + inst._processLineRight(map, val) + "</div>");
+				var line = inst._getLine(obj);
+
+				var divLine = $("<div class='flexcomplete-line'></div>").append(line);
 				
 				if (inst._showTooltip && $.tooltip) 
-					l1.attr('title', inst._getFulltext(map, val)).tooltip({showURL: false, delay : 80});
+					divLine.attr('title', inst._getFullText(obj)).tooltip({showURL: false, delay : 80});
 				
-				inst._arrayFather[i] = $("<div align='left' class='flexcomplete-line-common "+ inst._arrayFather[i].classe +"'></div>")
-					.data(DIV_CONTEUDO_NAME, inst._arrayFather[i])
+				inst._arrayFather[i] = $("<div align='left' class='flexcomplete-line-common'></div>")
+					.data(DIV_CONTEUDO_NAME, obj)
 					.data(PROP_NAME, inst)
-					.append(l1)
-					.append(l2)
-					.append("<br style='clear:both;'/>")
+					.append(divLine)
 					.mousedown(inst.choosingClick)
 					.mouseover(inst.mouseOver)
 					.mouseout(inst.mouseOut);
@@ -386,12 +394,25 @@
 			
 			var k = e.ascii, v = $.fn.flexcomplete._variables;
 
-			return k == v.KEY_TO_UP		||	k == v.KEY_TO_DOWN	||
-					k == v.KEY_TO_LEFT	||	k == v.KEY_TO_RIGHT	||
-					k == v.KEY_ENTER		||	k == v.KEY_PAGE_UP	||
-					/* k == v.KEY_DELETE		||	k == v.KEY_BACKSPACE || 	*/
-					k == v.KEY_PAGE_DOWN	||	k == v.KEY_ESC		||
-					k == v.KEY_HOME		||	k == v.KEY_END;
+			return k == v.KEY_TO_UP ||	k == v.KEY_TO_DOWN ||
+					k == v.KEY_TO_LEFT ||	k == v.KEY_TO_RIGHT ||
+					k == v.KEY_ENTER ||	k == v.KEY_PAGE_UP ||
+					/*
+					k == v.KEY_DELETE || k == v.KEY_BACKSPACE || 
+					*/
+					k == v.KEY_PAGE_DOWN ||	k == v.KEY_ESC ||
+					k == v.KEY_HOME	||	k == v.KEY_END;
+		},
+
+		_hover : function(oldIx, newIx) {
+
+			var inst = this;
+
+			if (oldIx >= 0)
+				inst._arrayFather[oldIx].find('.flexcomplete-line:first').removeClass('flexcomplete-line-hover');
+
+			if (newIx >= 0)
+				inst._arrayFather[newIx].find('.flexcomplete-line:first').addClass('flexcomplete-line-hover');
 		},
 		
 		_navigate : function(evt) {
@@ -399,74 +420,52 @@
 			var inst = this;
 			var key = evt.ascii;
 			var v = $.fn.flexcomplete._variables;
-			
-			if (inst._arrayFather.length >= 1) {
-		
-				if (key == v.KEY_TO_UP) {
-					
-					if (inst._fatherIndex >= 1)
-						inst._fatherIndex--;
-					else
-						inst._fatherIndex = inst._arrayFather.length-1;
-					
-					inst._father.children('div.flexcomplete-line-hover').removeClass('flexcomplete-line-hover');
 
-					inst._arrayFather[inst._fatherIndex].addClass('flexcomplete-line-hover');
-					
-				} else if (key == v.KEY_TO_DOWN) { 
-		
-					if (inst._fatherIndex < inst._arrayFather.length - 1)
-						inst._fatherIndex++;
-					else
-						inst._fatherIndex = 0;
-		
-					inst._father.children('div.flexcomplete-line-hover').removeClass('flexcomplete-line-hover');
-
-					inst._arrayFather[inst._fatherIndex].addClass('flexcomplete-line-hover');
-		
-				} else if (key == v.KEY_PAGE_UP) {
-					
-					if ((inst._fatherIndex - inst._jump) >= 0)
-						inst._fatherIndex = inst._fatherIndex - inst._jump;
-					else
-						inst._fatherIndex = 0;
-					
-					inst._father.children('div.flexcomplete-line-hover').removeClass('flexcomplete-line-hover');
-
-					inst._arrayFather[inst._fatherIndex].addClass('flexcomplete-line-hover');
-					
-				} else if (key == v.KEY_PAGE_DOWN) {
-		
-					if ((inst._fatherIndex + inst._jump) < inst._arrayFather.length)
-						inst._fatherIndex = inst._fatherIndex + inst._jump;
-					else
-						inst._fatherIndex = (inst._arrayFather.length-1);
-						
-					inst._father.children('div.flexcomplete-line-hover').removeClass('flexcomplete-line-hover');
-
-					inst._arrayFather[inst._fatherIndex].addClass('flexcomplete-line-hover');
-		
-				} else if (key == v.KEY_ENTER) { 
-		
-					if (inst._fatherIndex >= 0)
-						inst._onSelect(inst._arrayFather[inst._fatherIndex].data(DIV_CONTEUDO_NAME).map, inst._input.get(0)); 
-					
-					if (inst.isOpened())
-						inst.close();
-					
-					return;
-					
-				}
-			}
-			
 			if (key == v.KEY_ESC) {  
 				
 				inst.close();
 				return;
 			}
+
+			var oldIx = inst._fatherIndex;
+			
+			if (inst._arrayFather.length >= 1) {
+		
+				if (key == v.KEY_TO_UP || key == v.KEY_TO_DOWN || key == v.KEY_PAGE_UP || key == v.KEY_PAGE_DOWN) {
+
+					if (key == v.KEY_TO_UP) {
+					
+						inst._fatherIndex = (inst._fatherIndex >= 1) ? inst._fatherIndex - 1 : inst._arrayFather.length-1;
+
+					} else if (key == v.KEY_TO_DOWN) { 
+			
+						inst._fatherIndex = (inst._fatherIndex < inst._arrayFather.length - 1) ? inst._fatherIndex + 1 : 0;
+
+					} else if (key == v.KEY_PAGE_UP) {
+						
+						inst._fatherIndex = ((inst._fatherIndex - inst._jump) >= 0) ? inst._fatherIndex - inst._jump : 0;
+						
+					} else if (key == v.KEY_PAGE_DOWN) {
+			
+						inst._fatherIndex = ((inst._fatherIndex + inst._jump) < inst._arrayFather.length) ? inst._fatherIndex + inst._jump : (inst._arrayFather.length-1);
+					}
+
+					inst._hover(oldIx, inst._fatherIndex);
+
+				} else if (key == v.KEY_ENTER) { 
+		
+					if (inst._fatherIndex >= 0)
+						inst._onSelect(inst._arrayFather[inst._fatherIndex].data(DIV_CONTEUDO_NAME), inst._input.get(0)); 
+					
+					if (inst.isOpened())
+						inst.close();
+					
+					return;
+				}
+			}
 			
 			if (inst._autoReplacing == true && inst._fatherIndex >= 0 && inst._arrayFather.length >= 1)
-				inst._input.val(inst._getInputValue(inst._arrayFather[inst._fatherIndex].data(DIV_CONTEUDO_NAME).map));
+				inst._input.val(inst._getInputValue(inst._arrayFather[inst._fatherIndex].data(DIV_CONTEUDO_NAME)));
 		
 			inst.open();
 		},
@@ -482,7 +481,7 @@
 			
 			var inst = el.data(PROP_NAME);
 		
-			inst._onSelect(el.data(DIV_CONTEUDO_NAME).map, inst._input.get(0));
+			inst._onSelect(el.data(DIV_CONTEUDO_NAME), inst._input.get(0));
 			
 			if (inst.isOpened())
 				inst.close();
@@ -490,22 +489,20 @@
 		
 		mouseOver : function(event) {
 		
-			var el = $(createEvent(event).target);
+			var el = $(event.target);
+
+			el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
 			
-			if (!el.hasClass("flexcomplete-line-common"))
-				el = el.parents("div.flexcomplete-line-common:first");
-		
-			el.removeClass("flexcomplete-line").addClass("flexcomplete-line-hover");
+			el.addClass("flexcomplete-line-hover");
 		},
 		
 		mouseOut : function(event) {
 		
-			var el = $(createEvent(event).target);
+			var el = $(event.target);
+
+			el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
 			
-			if (!el.hasClass("flexcomplete-line-common"))
-				el = el.parents("div.flexcomplete-line-common:first");
-		
-			el.removeClass("flexcomplete-line-hover").addClass("flexcomplete-line");
+			el.removeClass("flexcomplete-line-hover");
 		},
 		
 		_looseFocus : function(event) {
@@ -541,8 +538,10 @@
 		},
 		
 		close : function(event) {
-			if(this._father!=null)
-			this._father.css({visibility : "hidden"}).remove();
+
+			if (this._father!=null)
+				this._father.css({visibility : "hidden"}).remove();
+
 			this._arrayFather = [];
 			this.opened = false;
 			this._onClose();
