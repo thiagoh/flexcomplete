@@ -1,126 +1,43 @@
-<script src="jquery-1.7.2.js"></script>
-<script src="flexcomplete-1.0.5.js"></script>
-
-<script type="text/javascript">
-
-$(function(){
-
-	$('#textbox').click(
-		function(){
-			$('#id').focus();
-		});
+<html>
+<head>
 	
-	$('#id').flexcomplete({
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="flexcomplete-1.1.0-min.js"></script>
+	<script type="text/javascript" src="resized-data-app.js?da"></script>
 
-			width: 300,
-			method : 'POST',
-			showTooltip : true,
-			onSelect : function(val, input) {
-			
-				var self = this;
-				
-				self.sdata(jQuery.grep(self.sdata(), function(e){ return val != e;}));
-				
-				var item = $("<span class='item'>" + val + "<span class='remove-item'>x</span></span>")
-					.find('.remove-item')
-					.click(function(){
-						item.remove();
-						self.sdata().push(val);
-						window.updateData();
-					}).end();
-				$('#container').append(item);
-				
-				window.updateData();
-				input.value = '';
-			},
-			getLine : function(data) {
-
-				return data;
-			},
-			filter : 
-                function(data, input) {
-					input = jQuery(input);
-					var re = new RegExp(input.val().replace($.fn.flexcomplete.reReplace, ''), "i");
-					return jQuery(data).filter(function(i) {
-							return re.test(data[i].replace($.fn.flexcomplete.reReplace, ''));
-						}); 
-				},
-			data : [
-					'thiago andrade', 'bruno henrique', 
-					'walmor cesar', 'breno nunes', 
-					'd\'alia', 'toto-tata', 
-					'jogo#velha', 'email@email.com',
-					'antonio braga', 'carlos leite',
-					'paulo amorim', 'raphael praxedes',
-					'thiago souza', 'thiago leite',
-					'thiago cavalcanti', 'thiago ferreira',
-					'thiago braga', 'thiago castro',
-					'thiago lima', 'thiago aragão',
-					'thiago alencar', 'thiago assis',
-					'hugo fernando', 'danilo lima',
-					'ronaldo nobrega', 'kleber xavier',
-					'andré barros', 'roberta almeida'
-					]
-		});
-
-	window.updateData = function() {
-
-		var data = $('#id').flexcomplete('sdata');
-		var dataContainer = $('#idDataContainer').html('');
-
-		for (var i in data) {
-
-			dataContainer.append('<div>' + data[i] + '</div>');
-		}
-	}
-
-	$('#idAddDataButton').click(function() {
-
-		var v = $('#idAddData').val();
-
-		if ($.trim(v) == '')
-			return;
-
-		$('#id').flexcomplete('sdata').push(v);
-
-		$('#idAddData').val('');
-		updateData();
-	});
-
-	updateData();
-});
-</script>
-
-<link rel="stylesheet" href="flexcomplete.css" />
-<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="flexcomplete.css" />
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
 <body>
 
-<h3>Flexcomplete</h3>
+	<h3>Flexcomplete</h3>
 
-<h4>
-The data array is 
-</h4>
+	<h4>
+	The data array is 
+	</h4>
 
-<div id="idDataContainer"></div>
+	<div id="idDataContainer"></div>
 
-<div>
-	<input id="idAddData" type="text" class="add-data" autocomplete="off" />
-	<input id="idAddDataButton" type="button" value="Add" />
-</div>
-
-<h4>
-Try typing some sequences that match with any names from the array. On this example the FlexComplete starts searching once you type any sequence with at least three characters (you can customize it). Ex.: try typing "thi".  On this example you cannot add duplicate items into the container.
-</h4>
-
-<div id="textbox" class="textbox">
-	<div id="container" class="container"></div>
-	<div class="wrapper">
-		<div class="innerWrapper">
-			<input id="id" type="text" class="inputtext" size="1" autocomplete="off" />
-		</div>
+	<div>
+		<input id="idAddData" type="text" class="add-data" autocomplete="off" />
+		<input id="idAddDataButton" type="button" value="Add" />
 	</div>
-	
-</div>
+
+	<h4>
+	Try typing some sequences that match with any names from the array. On this example the FlexComplete starts searching once you type any sequence with at least three characters (you can customize it). Ex.: try typing "thi".  On this example you cannot add duplicate items into the container.
+	</h4>
+
+	<div id="textbox" class="textbox">
+		<div id="container" class="container"></div>
+		<div class="wrapper">
+			<div class="innerWrapper">
+				<input type="text" flexcomplete class="inputtext" size="1" autocomplete="off" />
+			</div>
+		</div>
+		
+	</div>
 
 </body>
+</html>
