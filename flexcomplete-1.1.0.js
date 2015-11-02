@@ -101,7 +101,6 @@
 			o = $.extend({}, this._defaults, o);
 
 			this._input = o._input || null;
-			this._showTooltip = o._showTooltip || false;
 			this._processInput = o._processInput || null;
 			this._getLine = o._getLine || null;
 			this._getFullText = o._getFullText || null;
@@ -375,12 +374,6 @@
 				var line = inst._getLine(obj);
 
 				var divLine = $("<div class='flexcomplete-line'></div>").append(line);
-
-				if (inst._showTooltip && $.tooltip)
-					divLine.attr('title', inst._getFullText(obj)).tooltip({
-						showURL: false,
-						delay: 80
-					});
 
 				inst._arrayFather[i] = $("<div align='left' class='flexcomplete-line-common'></div>")
 					.data(PROP_DATA_NAME, obj)
