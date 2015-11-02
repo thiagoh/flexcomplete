@@ -1,13 +1,15 @@
 <html>
 <head>
 	
-	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="flexcomplete-1.1.0-min.js"></script>
 	<script type="text/javascript" src="app.js"></script>
 
 	<link rel="stylesheet" href="flexcomplete.css" />
 	<link rel="stylesheet" href="style.css" />
 </head>
+<body>
+
 <body>
 
 	<h3>Flexcomplete</h3>
@@ -18,8 +20,13 @@
 
 	<div id="idDataContainer"></div>
 
+	<div>
+		<input id="idAddData" type="text" class="add-data" autocomplete="off" />
+		<input id="idAddDataButton" type="button" value="Add" />
+	</div>
+
 	<h4>
-	Try typing some sequences that match with any names from the array. On this example the FlexComplete starts searching once you type any sequence with at least three characters (you can customize it). Ex.: try typing "thi". On this example you can add to the container equal items.
+	Try typing some sequences that match with any names from the array. On this example the FlexComplete starts searching once you type any sequence with at least three characters (you can customize it). Ex.: try typing "thi".  On this example you cannot add duplicate items into the container.
 	</h4>
 
 	<div id="textbox" class="textbox">
