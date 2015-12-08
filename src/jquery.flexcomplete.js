@@ -10,120 +10,302 @@
 
     'use strict';
 
-    var PROP_INSTANCE_NAME = 'Flexcomplete.instance',
-        PROP_DATA_NAME = 'Flexcomplete.data',
-        _variables = {
-            KEY_DO_SEARCH: 11111,
-            KEY_ENTER: 13,
-            KEY_TO_LEFT: 37,
-            KEY_TO_RIGHT: 39,
-            KEY_TO_UP: 38,
-            KEY_TO_DOWN: 40,
-            KEY_BACKSPACE: 8,
-            KEY_INSERT: 45,
-            KEY_DELETE: 46,
-            KEY_SHIFT: 16,
-            KEY_CTRL: 17,
-            KEY_PAGE_UP: 33,
-            KEY_PAGE_DOWN: 34,
-            KEY_ESC: 27,
-            KEY_TAB: 9,
-            KEY_HOME: 36,
-            KEY_END: 35,
-            STOPPED: 0,
-            RUNNABLE: 1
-        };
+    var pInstance = 'Flexcomplete.instance',
+        pData = 'Flexcomplete.data',
+        KEY_DO_SEARCH = 11111,
+        KEY_ENTER = 13,
+        KEY_TO_LEFT = 37,
+        KEY_TO_RIGHT = 39,
+        KEY_TO_UP = 38,
+        KEY_TO_DOWN = 40,
+        KEY_BACKSPACE = 8,
+        KEY_INSERT = 45,
+        KEY_DELETE = 46,
+        KEY_SHIFT = 16,
+        KEY_CTRL = 17,
+        KEY_PAGE_UP = 33,
+        KEY_PAGE_DOWN = 34,
+        KEY_ESC = 27,
+        KEY_TAB = 9,
+        KEY_HOME = 36,
+        KEY_END = 35,
+        choosingClick = function(event) {
 
-    function createEvent(event) {
+            event = createEvent(event);
 
-        if (event.ascii) {
-            return event;
-        }
+            var el = $(event.target);
 
-        event = $.event.fix(event || window.event);
+            // if (!el.hasClass("flexcomplete-line-common")) {
+            //     el = el.parents("div.flexcomplete-line-common");
+            // }
 
-        return {
-            type: event.type,
-            ascii: (event.keyCode ? event.keyCode : event.which),
-            target: $(event.target).get(0)
-        };
-    }
+            var inst = el.data(pInstance);
 
-    function Flexcomplete() {
-        return this;
-    }
+            if (typeof inst !== 'undefined') {
 
-    $.extend(Flexcomplete.prototype, {
+                inst.onSelect(el.data(pData), inst.input.get(0));
 
-        extend: function(o) {
-
-            $.extend(this, this, o);
+                if (inst.isOpened()) {
+                    inst.close();
+                }
+            }
         },
+        mouseOver = function(event) {
 
-        load: function(o) {
+            var el = $(event.target);
 
-            var inst = this;
+            el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
 
-            o = $.extend({}, $.flexcomplete.options, o);
+            el.addClass("active");
+        },
+        mouseOut = function(event) {
 
-            for (var i in o) {
-                this[i[0] === '_' ? i : "_" + i] = o[i] || null;
+            var el = $(event.target);
+
+            el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
+
+            el.removeClass("active");
+        },
+        gainFocus = function(inst, event) {
+
+            schedule(inst, createEvent(event));
+        },
+        looseFocus = function(inst, event) {
+
+            if (inst.isOpened()) {
+                console.log(inst._debug);
+                if (inst._debug !== true) {
+                    inst.close(createEvent(event));
+                }
+            }
+        },
+        isNavigation = function(e) {
+
+            var k = e.ascii;
+            return k === KEY_TO_UP || k === KEY_TO_DOWN || k === KEY_TO_LEFT ||
+                k === KEY_TO_RIGHT || k === KEY_ENTER || k === KEY_PAGE_UP ||
+                k === KEY_PAGE_DOWN || k === KEY_ESC || k === KEY_HOME || k === KEY_END;
+        },
+        drawChilds = function(inst) {
+
+            inst.parentEl.html('');
+
+            for (var i = 0; i < inst.children.length; i++) {
+
+                var obj = inst.children[i];
+                var line = inst.getLine(obj);
+                var divLine = $("<li class='flexcomplete-line list-group-item'></li>").append(line);
+
+                inst.children[i] = divLine //$("<div align='left' class='flexcomplete-line-common'></div>")
+                    .data(pData, obj)
+                    .data(pInstance, inst)
+                    .append(divLine)
+                    .mousedown(choosingClick)
+                    .mouseover(mouseOver)
+                    .mouseout(mouseOut);
+
+                inst.parentEl.append(inst.children[i]);
             }
 
-            this._staticDataSearch = typeof this._data !== 'undefined';
+            return inst;
+        },
+        drawFather = function(inst, filteredData) {
 
-            if (!this._staticDataSearch && (!this._url || $.trim(this._url) === '')) {
-                throw new Error("No database set. Please, set the offline data or an url");
+            var position = inst.input.offset();
+            var altura = inst.input.outerHeight();
+
+            inst.children = [];
+            inst.parentIndex = -1;
+
+            if (typeof inst.parentEl !== 'undefined') {
+                inst.parentEl.remove();
             }
 
-            this._width = typeof this._width !== 'undefined' && this._width !== null ? this._width : this._input.outerWidth();
-
-            this._arrayFather = [];
-            this._fatherIndex = -1;
-
-            if (typeof this._input.data(PROP_INSTANCE_NAME) === 'undefined') {
-                this._input.data(PROP_INSTANCE_NAME, this);
-            }
-
-            this._input
-                .keyup(function(e) {
-                    Flexcomplete.prototype._schedule.call(inst, e);
-                })
-                .keydown(function(e) {
-                    Flexcomplete.prototype._forwardNavigation.call(inst, e);
-                })
-                .focus(function(e) {
-                    Flexcomplete.prototype._gainFocus.call(inst, e);
-                })
-                .blur(function(e) {
-                    Flexcomplete.prototype._looseFocus.call(inst, e);
+            inst.parentEl = $('<div class="flexcomplete-parent list-group"></div>')
+                .css({
+                    display: 'none',
+                    top: (position.top + altura) + 'px',
+                    left: position.left + 'px',
+                    width: inst.width + 'px'
                 });
 
-            this._onLoad();
+            $('body').append(inst.parentEl);
 
-            return this;
-        },
+            if (filteredData && filteredData.length) {
 
-        _forwardNavigation: function(event) {
+                for (var i = 0, leni = filteredData.length; i < leni; i++) {
+                    inst.children.push(filteredData[i]);
+                }
 
-            event = createEvent(event);
+                inst.parentEl.show();
 
-            if (this._isNavigation(event)) {
-                this._navigate(event);
+            } else {
+
+                inst.parentEl.hide();
+            }
+
+            drawChilds(inst).open();
+
+            if (inst.children.length === 1 && inst.selectIfOneResult === true) {
+
+                inst.onSelect(inst.children[0].data(pData), inst.input.get(0));
+
+                if (inst.isOpened()) {
+                    inst.close();
+                }
             }
         },
+        search = function(inst, event) {
 
-        _schedule: function(event) {
+            if (typeof inst.interval !== 'undefined') {
+                clearInterval(inst.interval);
+            }
 
-            var inst = this;
+            if (inst.scheduler.executed !== true) {
 
-            event = createEvent(event);
+                if ($.trim(inst.input.val()).length === 0 || $.trim(inst.input.val()).length < inst.startIn) {
 
-            if (inst._isNavigation(event)) {
+                    if (inst.isOpened()) {
+                        inst.close();
+                    }
+
+                    return false;
+                }
+
+                var extraParamsTemp = {};
+                extraParamsTemp[inst.queryVar] = inst.processInput(inst.input.val());
+
+                if (typeof inst.extraParams === 'object') {
+
+                    $.each(inst.extraParams, function(key, param) {
+                        extraParamsTemp[key] = $.isFunction(param) ? param() : param;
+                    });
+
+                } else if (typeof inst.extraParams === 'function') {
+
+                    $.each(inst.extraParams(), function(key, param) {
+                        extraParamsTemp[key] = $.isFunction(param) ? param() : param;
+                    });
+
+                } else {
+                    throw new Error("Extra params should be an object or a function");
+                }
+
+                if (inst.staticDataSearch === true) {
+
+                    var arrData = inst.filter(inst.data, inst.input.get(0));
+
+                    inst.onFilter(arrData);
+
+                    drawFather(inst, arrData);
+
+                    inst.scheduler.executed = true;
+
+                } else {
+
+                    $.ajax({
+                        type: inst.method,
+                        dataType: 'json',
+                        url: inst.url,
+                        async: true,
+                        data: extraParamsTemp,
+                        success: function(data, status) {
+
+                            inst.onFilter(data);
+
+                            drawFather(inst, data);
+
+                            inst.scheduler.executed = true;
+                        },
+                        error: function(result) {
+                            throw new Error(result);
+                        }
+                    });
+                }
+            }
+        },
+        navigate = function(inst, event) {
+
+            var key = event.ascii;
+
+            if (key === KEY_ESC) {
+                inst.close();
                 return;
             }
 
-            if ($.trim(inst._input.val()).length === 0 || $.trim(inst._input.val()).length < inst._startIn) {
+            var oldIx = inst.parentIndex;
+
+            if (inst.children.length >= 1) {
+
+                if (key === KEY_TO_UP || key === KEY_TO_DOWN || key === KEY_PAGE_UP || key === KEY_PAGE_DOWN) {
+
+                    if (key === KEY_TO_UP) {
+
+                        inst.parentIndex = (inst.parentIndex >= 1) ? inst.parentIndex - 1 : inst.children.length - 1;
+
+                    } else if (key === KEY_TO_DOWN) {
+
+                        inst.parentIndex = (inst.parentIndex < inst.children.length - 1) ? inst.parentIndex + 1 : 0;
+
+                    } else if (key === KEY_PAGE_UP) {
+
+                        inst.parentIndex = ((inst.parentIndex - inst.jump) >= 0) ? inst.parentIndex - inst.jump : 0;
+
+                    } else if (key === KEY_PAGE_DOWN) {
+
+                        inst.parentIndex = ((inst.parentIndex + inst.jump) < inst.children.length) ? inst.parentIndex + inst.jump : (inst.children.length - 1);
+                    }
+
+                    hover(inst, oldIx, inst.parentIndex);
+
+                } else if (key === KEY_ENTER) {
+
+                    if (inst.parentIndex >= 0) {
+                        inst.onSelect(inst.children[inst.parentIndex].data(pData), inst.input.get(0));
+                    }
+                    if (inst.isOpened()) {
+                        inst.close();
+                    }
+
+                    return;
+                }
+            }
+
+            if (inst.autoReplacing === true && inst.parentIndex >= 0 && inst.children.length >= 1) {
+                inst.input.val(inst.getInputValue(inst.children[inst.parentIndex].data(pData)));
+            }
+
+            inst.open();
+        },
+        forwardNavigation = function(inst, event) {
+
+            event = createEvent(event);
+
+            if (isNavigation(event) !== false) {
+                navigate(inst, event);
+            }
+        },
+        hover = function(inst, oldIx, newIx) {
+
+            if (oldIx >= 0) {
+                inst.children[oldIx]
+                    .removeClass('active');
+            }
+
+            if (newIx >= 0) {
+                inst.children[newIx]
+                    .addClass('active');
+            }
+        },
+        schedule = function(inst, event) {
+
+            event = createEvent(event);
+
+            if (isNavigation(event) !== false) {
+                return;
+            }
+
+            if ($.trim(inst.input.val()).length === 0 || $.trim(inst.input.val()).length < inst.startIn) {
 
                 if (inst.isOpened()) {
                     inst.close();
@@ -134,14 +316,14 @@
 
             var now = (new Date()).getTime();
 
-            if (inst._scheduler && inst._scheduler.executed === true && inst._scheduler.timestamp + inst._delay < now) {
+            if (inst.scheduler && inst.scheduler.executed === true && inst.scheduler.timestamp + inst.delay < now) {
 
-                inst._scheduler.executed = false;
-                inst._scheduler.timestamp = now;
+                inst.scheduler.executed = false;
+                inst.scheduler.timestamp = now;
 
             } else {
 
-                inst._scheduler = {
+                inst.scheduler = {
                     executed: false,
                     timestamp: now
                 };
@@ -149,352 +331,110 @@
 
             /** se for um evento de foco nao esperar tempo nenhum */
             if (event.type.toLowerCase() === "focus") {
-                inst._search.call(inst, event);
+                search(inst, event);
                 return;
             }
 
-            if (inst._interval) {
-                clearInterval(inst._interval);
+            if (inst.interval) {
+                clearInterval(inst.interval);
             }
 
-            inst._interval = setInterval(function() {
-                inst._search.call(inst, event);
-            }, inst._delay);
+            inst.interval = setInterval(function() {
+                search(inst, event);
+            }, inst.delay);
+        },
+        createEvent = function(event) {
+
+            if (event.ascii) {
+                return event;
+            }
+
+            event = $.event.fix(event || window.event);
+
+            return {
+                type: event.type,
+                ascii: (event.keyCode ? event.keyCode : event.which),
+                target: $(event.target).get(0)
+            };
+        };
+
+    function Flexcomplete() {
+        return this;
+    }
+
+    $.extend(Flexcomplete.prototype, {
+
+        extend: function() {
+
+            $.extend.apply(this, [].prototype.slice.call(arguments));
         },
 
-        _search: function(event) {
+        load: function(o) {
 
             var inst = this;
 
-            clearInterval(inst._interval);
+            o = $.extend({}, $.flexcomplete.options, o);
 
-            if (inst._scheduler.executed === false) {
-
-                if ($.trim(inst._input.val()).length === 0 || $.trim(inst._input.val()).length < inst._startIn) {
-
-                    if (inst.isOpened()) {
-                        inst.close();
-                    }
-
-                    return false;
-                }
-
-                if (inst.status === _variables.STOPPED) {
-                    return false;
-                }
-
-                var extraParamsTemp = {};
-                extraParamsTemp[inst._queryVar] = inst._processInput(inst._input.val());
-
-                if ($.isPlainObject(inst._extraParams)) {
-
-                    $.each(inst._extraParams, function(key, param) {
-                        extraParamsTemp[key] = $.isFunction(param) ? param() : param;
-                    });
-
-                } else if ($.isFunction(inst._extraParams)) {
-
-                    $.each(inst._extraParams(), function(key, param) {
-                        extraParamsTemp[key] = $.isFunction(param) ? param() : param;
-                    });
-                }
-
-                if (inst._staticDataSearch) {
-
-                    var arrData = inst._filter(inst._data, inst._input.get(0));
-
-                    inst._onFilter(arrData);
-
-                    if (inst._showDefaultResults) {
-                        inst._drawFather(arrData);
-                    }
-
-                    inst._scheduler.executed = true;
-
-                } else {
-
-                    $.ajax({
-                        type: inst._method,
-                        dataType: 'json',
-                        url: inst._url,
-                        async: true,
-                        data: extraParamsTemp,
-                        success: function(data, status) {
-
-                            inst._onFilter(data);
-
-                            if (inst._showDefaultResults) {
-                                inst._drawFather(data);
-                            }
-
-                            inst._scheduler.executed = true;
-                        },
-                        error: function(result) {
-                            throw new Error(result);
-                        }
-                    });
-                }
-            }
-        },
-
-        _drawFather: function(filteredData) {
-
-            var inst = this;
-            var position = inst._input.offset();
-            var altura = inst._input.outerHeight();
-
-            inst._arrayFather = [];
-            inst._fatherIndex = -1;
-
-            if (inst._father) {
-                inst._father.remove();
+            for (var i in o) {
+                this[i] = o[i] || null;
             }
 
-            inst._father = $('<div class="flexcomplete-father"></div>')
-                .css({
-                    visibility: 'hidden',
-                    top: (position.top + altura) + 'px',
-                    left: position.left + 'px',
-                    width: inst._width + 'px'
+            this._debug = false;
+            this.staticDataSearch = typeof this.data !== 'undefined';
+
+            if (!this.staticDataSearch && (!this.url || $.trim(this.url) === '')) {
+                throw new Error("No database set. Please, set the offline data or an url");
+            }
+
+            this.width = typeof this.width !== 'undefined' && this.width !== null ? this.width : this.input.outerWidth();
+
+            this.children = [];
+            this.parentIndex = -1;
+
+            if (typeof this.input.data(pInstance) === 'undefined') {
+                this.input.data(pInstance, this);
+            }
+
+            this.input.attr('autocomplete', 'off');
+
+            this.input
+                .bind('keyup.Flexcomplete', function(e) {
+                    schedule(inst, e);
+                })
+                .bind('keydown.Flexcomplete', function(e) {
+                    forwardNavigation(inst, e);
+                })
+                .bind('focus.Flexcomplete', function(e) {
+                    gainFocus(inst, e);
+                })
+                .bind('blur.Flexcomplete', function(e) {
+                    looseFocus(inst, e);
                 });
 
-            $('body').append(inst._father);
-
-            if (filteredData && filteredData.length) {
-
-                for (var i = 0, leni = filteredData.length; i < leni; i++) {
-                    inst._arrayFather.push(filteredData[i]);
-                }
-
-                inst._father.css({
-                    visibility: "visible"
-                });
-
-            } else {
-                inst._father.css({
-                    visibility: "hidden"
-                });
-            }
-
-            inst._drawChilds().open();
-
-            if (inst._arrayFather.length === 1 && inst._selectIfOneResult === true) {
-
-                inst._onSelect(inst._arrayFather[0].data(PROP_DATA_NAME), inst._input.get(0));
-
-                if (inst.isOpened()) {
-                    inst.close();
-                }
-            }
-        },
-
-        reMap: {},
-
-        _matchText: function(re, inputValue) {
-
-            var inst = this;
-
-            if (!inputValue || $.trim(inputValue) === '') {
-                return inst._getFullText(inputValue);
-            }
-
-            if (!inst.reMap[inputValue]) {
-                inst.reMap[inputValue] = new RegExp("(" + inputValue.replace(/([\]^\${}|+().\[\\])/g, '\\$1') + ")", "ig");
-            }
-
-            return inst._getFullText(inputValue).replace(inst.reMap[inputValue], "<span class='flexcomplete-matched'>$1</span>");
-        },
-
-        _drawChilds: function() {
-
-            var inst = this;
-            inst._father.html('');
-
-            for (var i = 0; i < inst._arrayFather.length; i++) {
-
-                var obj = inst._arrayFather[i];
-
-                var line = inst._getLine(obj);
-
-                var divLine = $("<div class='flexcomplete-line'></div>").append(line);
-
-                inst._arrayFather[i] = $("<div align='left' class='flexcomplete-line-common'></div>")
-                    .data(PROP_DATA_NAME, obj)
-                    .data(PROP_INSTANCE_NAME, inst)
-                    .append(divLine)
-                    .mousedown(inst.choosingClick)
-                    .mouseover(inst.mouseOver)
-                    .mouseout(inst.mouseOut);
-
-                inst._father.append(inst._arrayFather[i]);
-            }
-
-            return inst;
-        },
-
-        _isNavigation: function(e) {
-
-            var k = e.ascii,
-                v = _variables;
-
-            return k === v.KEY_TO_UP || k === v.KEY_TO_DOWN ||
-                k === v.KEY_TO_LEFT || k === v.KEY_TO_RIGHT ||
-                k === v.KEY_ENTER || k === v.KEY_PAGE_UP ||
-                /*
-                k === v.KEY_DELETE || k === v.KEY_BACKSPACE || 
-                */
-                k === v.KEY_PAGE_DOWN || k === v.KEY_ESC ||
-                k === v.KEY_HOME || k === v.KEY_END;
-        },
-
-        _hover: function(oldIx, newIx) {
-
-            var inst = this;
-
-            if (oldIx >= 0) {
-                inst._arrayFather[oldIx].find('.flexcomplete-line:first').removeClass('flexcomplete-line-hover');
-            }
-
-            if (newIx >= 0) {
-                inst._arrayFather[newIx].find('.flexcomplete-line:first').addClass('flexcomplete-line-hover');
-            }
-        },
-
-        _navigate: function(evt) {
-
-            var inst = this;
-            var key = evt.ascii;
-            var v = _variables;
-
-            if (key === v.KEY_ESC) {
-                inst.close();
-                return;
-            }
-
-            var oldIx = inst._fatherIndex;
-
-            if (inst._arrayFather.length >= 1) {
-
-                if (key === v.KEY_TO_UP || key === v.KEY_TO_DOWN || key === v.KEY_PAGE_UP || key === v.KEY_PAGE_DOWN) {
-
-                    if (key === v.KEY_TO_UP) {
-
-                        inst._fatherIndex = (inst._fatherIndex >= 1) ? inst._fatherIndex - 1 : inst._arrayFather.length - 1;
-
-                    } else if (key === v.KEY_TO_DOWN) {
-
-                        inst._fatherIndex = (inst._fatherIndex < inst._arrayFather.length - 1) ? inst._fatherIndex + 1 : 0;
-
-                    } else if (key === v.KEY_PAGE_UP) {
-
-                        inst._fatherIndex = ((inst._fatherIndex - inst._jump) >= 0) ? inst._fatherIndex - inst._jump : 0;
-
-                    } else if (key === v.KEY_PAGE_DOWN) {
-
-                        inst._fatherIndex = ((inst._fatherIndex + inst._jump) < inst._arrayFather.length) ? inst._fatherIndex + inst._jump : (inst._arrayFather.length - 1);
-                    }
-
-                    inst._hover(oldIx, inst._fatherIndex);
-
-                } else if (key === v.KEY_ENTER) {
-
-                    if (inst._fatherIndex >= 0) {
-                        inst._onSelect(inst._arrayFather[inst._fatherIndex].data(PROP_DATA_NAME), inst._input.get(0));
-                    }
-                    if (inst.isOpened()) {
-                        inst.close();
-                    }
-
-                    return;
-                }
-            }
-
-            if (inst._autoReplacing === true && inst._fatherIndex >= 0 && inst._arrayFather.length >= 1) {
-                inst._input.val(inst._getInputValue(inst._arrayFather[inst._fatherIndex].data(PROP_DATA_NAME)));
-            }
-
-            inst.open();
-        },
-
-        choosingClick: function(event) {
-
-            event = createEvent(event);
-
-            var el = $(event.target);
-
-            if (!el.hasClass("flexcomplete-line-common")) {
-                el = el.parents("div.flexcomplete-line-common");
-            }
-
-            var inst = el.data(PROP_INSTANCE_NAME);
-
-            inst._onSelect(el.data(PROP_DATA_NAME), inst._input.get(0));
-
-            if (inst.isOpened()) {
-                inst.close();
-            }
-        },
-
-        mouseOver: function(event) {
-
-            var el = $(event.target);
-
-            el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
-
-            el.addClass("flexcomplete-line-hover");
-        },
-
-        mouseOut: function(event) {
-
-            var el = $(event.target);
-
-            el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
-
-            el.removeClass("flexcomplete-line-hover");
-        },
-
-        _looseFocus: function(event) {
-
-            if (this.isOpened()) {
-                this.close(createEvent(event));
-            }
-        },
-
-        _gainFocus: function(event) {
-
-            this._schedule(createEvent(event));
-        },
-
-        setStatus: function(status) {
-
-            if (status !== _variables.STOPPED && status !== _variables.RUNNABLE) {
-                status = _variables.STOPPED;
-            }
-
-            this.status = status;
+            return this;
         },
 
         select: function(obj) {
 
-            this._onSelect(obj, this._input.get(0));
+            this.onSelect(obj, this.input.get(0));
         },
 
         close: function(event) {
 
-            if (typeof this._father !== 'undefined') {
-                this._father.css({
-                    visibility: "hidden"
-                }).remove();
+            if (typeof this.parentEl !== 'undefined') {
+                this.parentEl.hide();
             }
 
-            this._arrayFather = [];
             this.opened = false;
-            this._onClose();
         },
 
         open: function() {
 
             this.opened = true;
+
+            if (typeof this.parentEl !== 'undefined') {
+                this.parentEl.show();
+            }
         },
 
         isOpened: function() {
@@ -504,46 +444,44 @@
 
         search: function() {
 
-            var inst = this;
-
-            return inst._schedule({
+            return schedule(this, {
                 type: 'keyup',
-                target: inst._input,
-                ascii: _variables.KEY_DO_SEARCH
+                target: this.input,
+                ascii: KEY_DO_SEARCH
             });
         },
 
         staticData: function(d) {
 
             if (typeof d !== 'undefined') {
-                this._data = d;
+                this.data = d;
             }
 
-            return this._data;
+            return this.data;
         },
 
         sdata: function(d) {
             return this.staticData(d);
         },
 
+        debug: function(enable) {
+            this._debug = enable;
+        },
+
         unload: function() {
 
-            var inst = this;
+            this.close();
+            this.input.unbind('keyup.Flexcomplete', schedule);
+            this.input.unbind('keydown.Flexcomplete', forwardNavigation);
+            this.input.unbind('focus.Flexcomplete', gainFocus);
+            this.input.unbind('blur.Flexcomplete', looseFocus);
 
-            try {
+            if (typeof this.parentEl !== 'undefined') {
+                this.parentEl.empty();
+                this.parentEl.remove();
+            }
 
-                inst.close();
-                inst.setStatus(_variables.STOPPED);
-                inst._input.unbind('keyup', inst._schedule);
-                inst._input.unbind('keydown', inst._forwardNavigation);
-                inst._input.unbind('focus', inst._gainFocus);
-                inst._input.unbind('blur', inst._looseFocus);
-                inst._father.remove();
-                inst._input.removeData(PROP_INSTANCE_NAME);
-
-            } catch (e) {}
-
-            inst._onUnload();
+            this.input.removeData(pInstance);
         }
     });
 
@@ -551,35 +489,28 @@
 
         //this.reReplace = /([\]^\${}|!@#\*\-+()\'.\[\\])/g;
 
-        var inst = $(this).data(PROP_INSTANCE_NAME),
+        var inst = $(this).data(pInstance),
             opt, flex;
 
         var args = Array.prototype.slice.call(arguments, 1);
 
         if (typeof options === 'string') {
 
-            if (options === 'close' || options === 'search' || options === 'select' || options === 'unload' || options === 'staticData' || options === 'sdata') {
+            if (/open|close|search|select|unload|staticData|extend|sdata|debug/.test(options)) {
 
-                var v = inst[options].apply(inst, args);
+                return inst[options].apply(inst, args);
 
-                return v;
+            } else {
 
-            } else if (options === 'extend') {
-
-                args = args[0];
-                opt = {};
-
-                $.each(args, function(i, item) {
-                    opt["_" + i] = item;
-                });
-
-                return inst[options].call(inst, opt);
+                if (console) {
+                    console.warn('No such ' + options + ' command found');
+                }
             }
         } else {
 
-            return this.each(function() {
+            return this.each(function(i, item) {
 
-                if (typeof $(this).data(PROP_INSTANCE_NAME) === 'undefined') {
+                if (typeof $(this).data(pInstance) === 'undefined') {
 
                     if (typeof options === 'object') {
 
@@ -587,13 +518,12 @@
                         opt = {};
 
                         $.each(options, function(i, item) {
-                            opt["_" + i] = item;
+                            opt[i] = item;
                         });
-                        opt._input = $(this);
+                        opt.input = $(this);
 
                         flex.load(opt);
-                        $(this).data(PROP_INSTANCE_NAME, flex);
-
+                        $(this).data(pInstance, flex);
                     }
                 }
 
@@ -606,8 +536,10 @@
 
         return this.each(function() {
 
-            if ($(this).data(PROP_INSTANCE_NAME)) {
-                $(this).data(PROP_INSTANCE_NAME).unload();
+            var instance = $(this).data(pInstance);
+
+            if (typeof instance === 'object') {
+                instance.unload();
             }
 
             return this;
@@ -636,30 +568,36 @@
             return line;
         },
         onFilter: function() {},
-        onLoad: function() {},
-        onUnload: function() {},
-        onClose: function() {},
         getFullText: function(obj) {
             return obj;
         },
         getInputValue: function(value) {
             return value;
         },
-        status: _variables.RUNNABLE,
-        filter: function(line, input) {
+        matches: function(value, userSearch, re) {
 
-            var re = new RegExp($(input).val().replace($.fn.flexcomplete.reReplace, ''), "i");
+            if (typeof re === 'undefined') {
+                re = new RegExp(userSearch.replace($.fn.flexcomplete.reReplace, ''), "i");
+            }
 
-            return $(line).filter(function(i) {
-                return re.test(line[i].replace($.fn.flexcomplete.reReplace, ''));
-            });
+            return re.test(value);
         },
-        delay: 300,
+        filter: function(arr, userSearch) {
+
+            var inst = this;
+            userSearch = userSearch.tagName === 'INPUT' ? $(userSearch).val() : userSearch;
+
+            var re = new RegExp(userSearch.replace($.fn.flexcomplete.reReplace, ''), "i");
+
+            return arr.filter(function(item) {
+                return this.matches(item, userSearch, re);
+            }, this);
+        },
+        delay: 100,
         jump: 6,
         startIn: 3,
         width: null,
         selectIfOneResult: false,
-        showDefaultResults: true,
         staticDataSearch: false,
         extraParams: {},
         autoReplacing: false
