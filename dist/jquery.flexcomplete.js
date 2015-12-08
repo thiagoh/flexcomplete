@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var PROP_INSTANCE_NAME = 'Flexcomplete.instance',
-        PROP_DATA_NAME = 'Flexcomplete.data',
+    var pInstance = 'Flexcomplete.instance',
+        pData = 'Flexcomplete.data',
         KEY_DO_SEARCH = 11111,
         KEY_ENTER = 13,
         KEY_TO_LEFT = 37,
@@ -30,15 +30,15 @@
 
             var el = $(event.target);
 
-            if (!el.hasClass("flexcomplete-line-common")) {
-                el = el.parents("div.flexcomplete-line-common");
-            }
+            // if (!el.hasClass("flexcomplete-line-common")) {
+            //     el = el.parents("div.flexcomplete-line-common");
+            // }
 
-            var inst = el.data(PROP_INSTANCE_NAME);
+            var inst = el.data(pInstance);
 
             if (typeof inst !== 'undefined') {
 
-                inst.onSelect(el.data(PROP_DATA_NAME), inst.input.get(0));
+                inst.onSelect(el.data(pData), inst.input.get(0));
 
                 if (inst.isOpened()) {
                     inst.close();
@@ -51,7 +51,7 @@
 
             el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
 
-            el.addClass("flexcomplete-line-hover");
+            el.addClass("active");
         },
         mouseOut = function(event) {
 
@@ -59,7 +59,7 @@
 
             el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
 
-            el.removeClass("flexcomplete-line-hover");
+            el.removeClass("active");
         },
         gainFocus = function(inst, event) {
 
@@ -68,7 +68,9 @@
         looseFocus = function(inst, event) {
 
             if (inst.isOpened()) {
-                inst.close(createEvent(event));
+                if (inst._debug !== true) {
+                    inst.close(createEvent(event));
+                }
             }
         },
         isNavigation = function(e) {
@@ -86,15 +88,15 @@
 
                 var obj = inst.children[i];
                 var line = inst.getLine(obj);
-                var divLine = $("<div class='flexcomplete-line'></div>").append(line);
+                var divLine = $("<li class='flexcomplete-line list-group-item'></li>").append(line);
 
-                inst.children[i] = $("<div align='left' class='flexcomplete-line-common'></div>")
-                    .data(PROP_DATA_NAME, obj)
-                    .data(PROP_INSTANCE_NAME, inst)
+                inst.children[i] = divLine //$("<div align='left' class='flexcomplete-line-common'></div>")
+                    .data(pData, obj)
+                    .data(pInstance, inst)
                     .append(divLine)
-                    .mousedown(inst.choosingClick)
-                    .mouseover(inst.mouseOver)
-                    .mouseout(inst.mouseOut);
+                    .mousedown(choosingClick)
+                    .mouseover(mouseOver)
+                    .mouseout(mouseOut);
 
                 inst.parentEl.append(inst.children[i]);
             }
@@ -113,7 +115,7 @@
                 inst.parentEl.remove();
             }
 
-            inst.parentEl = $('<div class="flexcomplete-parentEl"></div>')
+            inst.parentEl = $('<div class="flexcomplete-parent list-group"></div>')
                 .css({
                     display: 'none',
                     top: (position.top + altura) + 'px',
@@ -140,7 +142,7 @@
 
             if (inst.children.length === 1 && inst.selectIfOneResult === true) {
 
-                inst.onSelect(inst.children[0].data(PROP_DATA_NAME), inst.input.get(0));
+                inst.onSelect(inst.children[0].data(pData), inst.input.get(0));
 
                 if (inst.isOpened()) {
                     inst.close();
@@ -248,12 +250,12 @@
                         inst.parentIndex = ((inst.parentIndex + inst.jump) < inst.children.length) ? inst.parentIndex + inst.jump : (inst.children.length - 1);
                     }
 
-                    inst.hover(oldIx, inst.parentIndex);
+                    hover(inst, oldIx, inst.parentIndex);
 
                 } else if (key === KEY_ENTER) {
 
                     if (inst.parentIndex >= 0) {
-                        inst.onSelect(inst.children[inst.parentIndex].data(PROP_DATA_NAME), inst.input.get(0));
+                        inst.onSelect(inst.children[inst.parentIndex].data(pData), inst.input.get(0));
                     }
                     if (inst.isOpened()) {
                         inst.close();
@@ -264,7 +266,7 @@
             }
 
             if (inst.autoReplacing === true && inst.parentIndex >= 0 && inst.children.length >= 1) {
-                inst.input.val(inst.getInputValue(inst.children[inst.parentIndex].data(PROP_DATA_NAME)));
+                inst.input.val(inst.getInputValue(inst.children[inst.parentIndex].data(pData)));
             }
 
             inst.open();
@@ -275,6 +277,18 @@
 
             if (isNavigation(event) !== false) {
                 navigate(inst, event);
+            }
+        },
+        hover = function(inst, oldIx, newIx) {
+
+            if (oldIx >= 0) {
+                inst.children[oldIx]
+                    .removeClass('active');
+            }
+
+            if (newIx >= 0) {
+                inst.children[newIx]
+                    .addClass('active');
             }
         },
         schedule = function(inst, event) {
@@ -359,6 +373,7 @@
                 this[i] = o[i] || null;
             }
 
+            this._debug = false;
             this.staticDataSearch = typeof this.data !== 'undefined';
 
             if (!this.staticDataSearch && (!this.url || $.trim(this.url) === '')) {
@@ -370,9 +385,11 @@
             this.children = [];
             this.parentIndex = -1;
 
-            if (typeof this.input.data(PROP_INSTANCE_NAME) === 'undefined') {
-                this.input.data(PROP_INSTANCE_NAME, this);
+            if (typeof this.input.data(pInstance) === 'undefined') {
+                this.input.data(pInstance, this);
             }
+
+            this.input.attr('autocomplete', 'off');
 
             this.input
                 .bind('keyup.Flexcomplete', function(e) {
@@ -389,19 +406,6 @@
                 });
 
             return this;
-        },
-
-        hover: function(oldIx, newIx) {
-
-            var inst = this;
-
-            if (oldIx >= 0) {
-                inst.children[oldIx].find('.flexcomplete-line:first').removeClass('flexcomplete-line-hover');
-            }
-
-            if (newIx >= 0) {
-                inst.children[newIx].find('.flexcomplete-line:first').addClass('flexcomplete-line-hover');
-            }
         },
 
         select: function(obj) {
@@ -454,6 +458,10 @@
             return this.staticData(d);
         },
 
+        debug: function(enable) {
+            this._debug = enable;
+        },
+
         unload: function() {
 
             this.close();
@@ -467,7 +475,7 @@
                 this.parentEl.remove();
             }
 
-            this.input.removeData(PROP_INSTANCE_NAME);
+            this.input.removeData(pInstance);
         }
     });
 
@@ -475,14 +483,14 @@
 
         //this.reReplace = /([\]^\${}|!@#\*\-+()\'.\[\\])/g;
 
-        var inst = $(this).data(PROP_INSTANCE_NAME),
+        var inst = $(this).data(pInstance),
             opt, flex;
 
         var args = Array.prototype.slice.call(arguments, 1);
 
         if (typeof options === 'string') {
 
-            if (/open|close|search|select|unload|staticData|extend|sdata/.test(options)) {
+            if (/open|close|search|select|unload|staticData|extend|sdata|debug/.test(options)) {
 
                 return inst[options].apply(inst, args);
 
@@ -496,7 +504,7 @@
 
             return this.each(function(i, item) {
 
-                if (typeof $(this).data(PROP_INSTANCE_NAME) === 'undefined') {
+                if (typeof $(this).data(pInstance) === 'undefined') {
 
                     if (typeof options === 'object') {
 
@@ -509,7 +517,7 @@
                         opt.input = $(this);
 
                         flex.load(opt);
-                        $(this).data(PROP_INSTANCE_NAME, flex);
+                        $(this).data(pInstance, flex);
                     }
                 }
 
@@ -522,7 +530,7 @@
 
         return this.each(function() {
 
-            var instance = $(this).data(PROP_INSTANCE_NAME);
+            var instance = $(this).data(pInstance);
 
             if (typeof instance === 'object') {
                 instance.unload();
@@ -579,10 +587,9 @@
                 return this.matches(item, userSearch, re);
             }, this);
         },
-
         delay: 100,
         jump: 6,
-        startIn: 3,
+        startIn: 1,
         width: null,
         selectIfOneResult: false,
         staticDataSearch: false,

@@ -73,7 +73,6 @@
         looseFocus = function(inst, event) {
 
             if (inst.isOpened()) {
-                console.log(inst._debug);
                 if (inst._debug !== true) {
                     inst.close(createEvent(event));
                 }
@@ -595,7 +594,7 @@
         },
         delay: 100,
         jump: 6,
-        startIn: 3,
+        startIn: 1,
         width: null,
         selectIfOneResult: false,
         staticDataSearch: false,
