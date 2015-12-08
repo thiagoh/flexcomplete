@@ -1,0 +1,27 @@
+{
+  "name": "flexcomplete",
+  "title": "Flexcomplete",
+  "description": "A flexible autocomplete plugin for jQuery",
+  "version": "0.1.0",
+  "homepage": "https://github.com/thiago/flexcomplete",
+  "author": {
+    "name": "Thiago Andrade",
+    "email": "thiagoh@gmail.com",
+    "url": "https://about.me/thiagoh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thiago/flexcomplete.git"
+  },
+  "bugs": "https://github.com/thiago/flexcomplete/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/thiago/flexcomplete/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "1.2"
+  },
+  "keywords": ["autocomplete", "complete", "data", "offline", "search", "keypress", "keydown", "keyup"]
+}

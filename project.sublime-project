@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/thiago/dev/javascript/flexcomplete",
+			"folder_exclude_patterns":["node_modules"] 
+		}
+	]
+}
