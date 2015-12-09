@@ -1,4 +1,4 @@
-/*! Flexcomplete - v0.1.0 - 2015-12-08
+/*! Flexcomplete - v0.1.0 - 2015-12-09
 * https://github.com/thiago/flexcomplete
 * Copyright (c) 2015 Thiago Andrade; Licensed MIT */
 (function($) {
