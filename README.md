@@ -15,7 +15,9 @@ In your web page:
 <script src="dist/flexcomplete.min.js"></script>
 <script>
 jQuery(function($) {
-  $.awesome(); // "awesome"
+  $.flexcomplete({
+        url: 'http://localhost:8080/search' // <-- your_search_url_here
+  }); 
 });
 </script>
 ```
