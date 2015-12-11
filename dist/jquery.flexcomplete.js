@@ -1,4 +1,4 @@
-/*! Flexcomplete - v0.1.0 - 2015-12-09
+/*! Flexcomplete - v0.1.0 - 2015-12-11
 * https://github.com/thiago/flexcomplete
 * Copyright (c) 2015 Thiago Andrade; Licensed MIT */
 (function($) {
@@ -80,18 +80,18 @@
                 k === KEY_TO_RIGHT || k === KEY_ENTER || k === KEY_PAGE_UP ||
                 k === KEY_PAGE_DOWN || k === KEY_ESC || k === KEY_HOME || k === KEY_END;
         },
-        drawChilds = function(inst) {
+        drawChilds = function(inst, filteredDataArray) {
 
-            inst.parentEl.html('');
+            inst.parentEl.empty();
 
-            for (var i = 0; i < inst.children.length; i++) {
+            for (var i = 0; i < filteredDataArray.length; i++) {
 
-                var obj = inst.children[i];
-                var line = inst.getLine(obj);
+                var data = filteredDataArray[i];
+                var line = inst.getLine(data);
                 var divLine = $("<li class='flexcomplete-line list-group-item'></li>").append(line);
 
                 inst.children[i] = divLine //$("<div align='left' class='flexcomplete-line-common'></div>")
-                    .data(pData, obj)
+                    .data(pData, data)
                     .data(pInstance, inst)
                     .append(divLine)
                     .mousedown(choosingClick)
@@ -103,7 +103,7 @@
 
             return inst;
         },
-        drawFather = function(inst, filteredData) {
+        drawFather = function(inst, filteredDataArray) {
 
             var position = inst.input.offset();
             var altura = inst.input.outerHeight();
@@ -125,20 +125,20 @@
 
             $('body').append(inst.parentEl);
 
-            if (filteredData && filteredData.length) {
+            if (filteredDataArray && filteredDataArray.length) {
 
-                for (var i = 0, leni = filteredData.length; i < leni; i++) {
-                    inst.children.push(filteredData[i]);
+                for (var i = 0, leni = filteredDataArray.length; i < leni; i++) {
+                    inst.children.push(filteredDataArray[i]);
                 }
 
                 inst.parentEl.show();
+
+                drawChilds(inst, filteredDataArray).open();
 
             } else {
 
                 inst.parentEl.hide();
             }
-
-            drawChilds(inst).open();
 
             if (inst.children.length === 1 && inst.selectIfOneResult === true) {
 
@@ -189,8 +189,6 @@
 
                     var arrData = inst.filter(inst.data, inst.input.get(0));
 
-                    inst.onFilter(arrData);
-
                     drawFather(inst, arrData);
 
                     inst.scheduler.executed = true;
@@ -204,8 +202,6 @@
                         async: true,
                         data: extraParamsTemp,
                         success: function(data, status) {
-
-                            inst.onFilter(data);
 
                             drawFather(inst, data);
 
@@ -561,7 +557,6 @@
         getLine: function(line) {
             return line;
         },
-        onFilter: function() {},
         getFullText: function(obj) {
             return obj;
         },

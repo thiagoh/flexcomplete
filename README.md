@@ -16,7 +16,11 @@ In your web page:
 <script>
 jQuery(function($) {
   $.flexcomplete({
-        url: 'http://localhost:8080/search' // <-- your_search_url_here
+        url: 'http://localhost:8080/search', // <-- your_search_url_here
+        onSelect: function(value, input) {
+            input.value = value;
+            console.log('You selected the value:' + value);
+        }
   }); 
 });
 </script>
