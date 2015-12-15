@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"filte",
+				"filteredData"
+			],
+			[
+				"pub",
+				"PublishComparator"
+			],
+			[
+				"data",
+				"dataByName"
+			],
+			[
 				"pro",
 				"prototype"
 			],
@@ -146,10 +158,6 @@
 			[
 				"read",
 				"readDirDeeply"
-			],
-			[
-				"data",
-				"dataEntry"
 			],
 			[
 				"i",
@@ -391,7 +399,7 @@
 			"file": "demo/simple.html",
 			"settings":
 			{
-				"buffer_size": 1506,
+				"buffer_size": 5036,
 				"line_ending": "Unix"
 			}
 		},
@@ -407,15 +415,15 @@
 			"file": "src/jquery.flexcomplete.js",
 			"settings":
 			{
-				"buffer_size": 17387,
+				"buffer_size": 17191,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "dist/jquery.flexcomplete.min.js",
+			"file": "src/flexcomplete.css",
 			"settings":
 			{
-				"buffer_size": 7789,
+				"buffer_size": 210,
 				"line_ending": "Unix"
 			}
 		}
@@ -423,9 +431,21 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 75.0,
+		"height": 117.0,
 		"selected_items":
 		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"java",
+				"Set Syntax: Java"
+			],
+			[
+				"show l",
+				"SublimeLinter: Show Error List"
+			],
 			[
 				"copy pa",
 				"Copy Relative Path: Copy"
@@ -449,10 +469,6 @@
 			[
 				"view brow",
 				"Markdown Preview: Preview in Browser"
-			],
-			[
-				"install",
-				"Package Control: Install Package"
 			],
 			[
 				"javasc",
@@ -481,10 +497,6 @@
 			[
 				"html",
 				"HTMLBeautify"
-			],
-			[
-				"java",
-				"Set Syntax: JavaScript"
 			],
 			[
 				"show",
@@ -660,6 +672,15 @@
 	},
 	"file_history":
 	[
+		"/home/thiago/dev/javascript/flexcomplete/README.md",
+		"/home/thiago/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/thiago/.cache/.fr-WbPgkD/jquery-1.0.1/src/jquery/jquery.js",
+		"/home/thiago/.cache/.fr-2Y6gUa/ckeditor-dev-4.5.6/gruntfile.js",
+		"/home/thiago/.cache/.fr-fFS8rV/ckeditor-dev-4.5.6/plugins/find/dialogs/find.js",
+		"/home/thiago/.cache/.fr-6tVu5n/ckeditor/ckeditor.js",
+		"/home/thiago/dev/fac/recife/svn-update.sh",
+		"/home/thiago/dev/javascript/flexcomplete/src/flexcomplete.css",
+		"/home/thiago/dev/javascript/flexcomplete/dist/jquery.flexcomplete.min.js",
 		"/home/thiago/dev/javascript/flexcomplete/demo/simple.js",
 		"/home/thiago/dev/javascript/flexcomplete/test/flexcomplete.html",
 		"/home/thiago/dev/javascript/flexcomplete/test/.jshintrc",
@@ -694,7 +715,6 @@
 		"/home/thiago/dev/javascript/tiny-worker/node_modules/grunt/node_modules/colors/test.js",
 		"/home/thiago/dev/javascript/tiny-worker/tiny-worker.js",
 		"/home/thiago/dev/javascript/tiny-worker/package.json",
-		"/home/thiago/dev/fac/recife/svn-update.sh",
 		"/home/thiago/dev/fac/recife/test.sh",
 		"/home/thiago/dev/fac/recife/target2/tools/minifier/minifier.js",
 		"/home/thiago/dev/fac/recife/target2/tools/minifier/tiny-worker.js",
@@ -720,7 +740,6 @@
 		"/home/thiago/dev/fac/recife/target2/portal-web/docroot/html/js/highcharts4/source-hash.json",
 		"/home/thiago/dev/fac/recife/target2/tools/minifier/out",
 		"/home/thiago/dev/fac/recife/target2/portal-web/docroot/html/js/source-hash.json",
-		"/home/thiago/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
 		"/home/thiago/.config/sublime-text-2/Packages/JavaScript Refactor/Context.sublime-menu",
 		"/home/thiago/.config/sublime-text-2/Packages/JavaScript Refactor/Default.sublime-commands",
 		"/home/thiago/.config/sublime-text-2/Packages/JavaScript Refactor/js/run-rename-variable.js",
@@ -780,14 +799,7 @@
 		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/com/liferay/portal/service/impl/ImageLocalServiceImpl.java",
 		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/META-INF/util-spring.xml",
 		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/com/liferay/portal/webserver/WebServerServletTokenImpl.java",
-		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/bin/META-INF/util-spring.xml",
-		"/home/thiago/dev/fac/recife/target2/portal-web/docroot/html/portal/messenger/modal.html",
-		"/home/thiago/dev/fac/recife/target2/portal-web/docroot/html/js/target/storage.js",
-		"/home/thiago/dev/fac/recife/target2/portal-web/docroot/html/js/target/string.js",
-		"/home/thiago/dev/fac/recife/eclipse-project-all.sh",
-		"/home/thiago/dev/fac/recife/clean-all.sh",
-		"/home/thiago/dev/fac/recife/deploy-full-all.sh",
-		"/home/thiago/dev/fac/recife/piece-clean-all.sh"
+		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/bin/META-INF/util-spring.xml"
 	],
 	"find":
 	{
@@ -795,7 +807,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"/home/thiago/dev/fac/recife/target2/,*.js",
@@ -814,6 +826,64 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"drawChilds",
+			"html(",
+			"children",
+			"pData",
+			"onSelect",
+			"pData",
+			"onSelect",
+			"filter",
+			"onFilter",
+			"awesome",
+			"selector",
+			"(($",
+			"f1",
+			"style=\"height:200px;\"",
+			"console",
+			"children",
+			"flexcomplete-line",
+			"hover",
+			"navigate",
+			"forwardNavigation",
+			"isNavigation",
+			"forwardNavigation",
+			"isNavigation",
+			"navigate",
+			"isNavigation",
+			"hover",
+			"navigate",
+			"flexcomplete-line-hover",
+			"hover",
+			"divLine",
+			"flexcomplete-line-common",
+			"div",
+			"father",
+			"flexcomplete-pare",
+			"debug",
+			", ",
+			" ",
+			"data",
+			"div.",
+			"position",
+			"  ",
+			"exampleInputEmail1",
+			"PROP_DATA_NAME",
+			"choosingClick",
+			"schedule",
+			"isOpened",
+			"choosingClick",
+			"data",
+			"this",
+			"createEvent",
+			"variables",
+			"v.",
+			"setStatus(this, variables.STOPPED);",
+			".v",
+			"KEY_TO_UP",
+			"v.",
+			"variables",
+			"KEY_DO_SEARCH",
 			"reMap",
 			"matchText",
 			"mouseOver",
@@ -883,65 +953,7 @@
 			"|| options",
 			"focus",
 			"console.",
-			"console.l",
-			"_schedule",
-			"keyup",
-			"item",
-			"item)",
-			"each",
-			"asyncTest",
-			"async",
-			"'antonio'",
-			"childs",
-			"_getLine",
-			"_search",
-			"_drawFather",
-			"_drawChilds",
-			"father",
-			"_drawFather",
-			"_search",
-			"console.",
-			"_father",
-			"unload",
-			"inst",
-			"_onUnload",
-			"item",
-			"notEquals",
-			"PROP_INSTANCE_NAME",
-			"delay",
-			"_staticDataSearch",
-			"getLine",
-			"showTooltip",
-			"getInputValue",
-			"onSelect",
-			"getInputValue",
-			"filter",
-			"getLine",
-			"elems",
-			"inst",
-			"_defaults",
-			"options",
-			"createEvent",
-			"KEY_TO_LEFT",
-			"gulp",
-			", unde",
-			"test_work_x_commands_async",
-			"wrapper",
-			"generateAsyncCommand",
-			"index",
-			"]",
-			"[",
-			"generateAsyncCommand",
-			"countWorkersToBeExecuted",
-			"repeat",
-			"generateAsyncCommand",
-			"fn",
-			"repeat",
-			"argsArray",
-			"console",
-			"return promise;",
-			"commands.length",
-			"getAsyncCommand"
+			"console.l"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -949,6 +961,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"active",
+			"parent",
 			"parentEl",
 			"looseFocus",
 			"navigate",
@@ -1028,7 +1042,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1036,15 +1050,19 @@
 					"file": "demo/simple.html",
 					"settings":
 					{
-						"buffer_size": 1506,
+						"buffer_size": 5036,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1089,
-								1089
+								3522,
+								3522
+							],
+							[
+								4565,
+								4565
 							]
 						],
 						"settings":
@@ -1155,6 +1173,7 @@
 								"trailing": true,
 								"wsh": true
 							},
+							"nodePath": "node",
 							"pep8": true,
 							"pep8_ignore":
 							[
@@ -1192,7 +1211,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 19.0,
+						"translation.y": 455.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1209,8 +1228,8 @@
 						"selection":
 						[
 							[
-								3701,
-								3701
+								5061,
+								5061
 							]
 						],
 						"settings":
@@ -1359,7 +1378,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1536.0,
+						"translation.y": 2167.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1369,15 +1388,15 @@
 					"file": "src/jquery.flexcomplete.js",
 					"settings":
 					{
-						"buffer_size": 17387,
+						"buffer_size": 17191,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								15931,
+								15931
 							]
 						],
 						"settings":
@@ -1526,25 +1545,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 9302.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "dist/jquery.flexcomplete.min.js",
+					"file": "src/flexcomplete.css",
 					"settings":
 					{
-						"buffer_size": 7789,
+						"buffer_size": 210,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								133,
-								133
+								166,
+								166
 							]
 						],
 						"settings":
@@ -1687,7 +1706,8 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1747,6 +1767,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"re",
+				"README.md"
+			],
 			[
 				"pack",
 				"package.json"

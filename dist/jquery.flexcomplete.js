@@ -1,4 +1,4 @@
-/*! Flexcomplete - v0.1.0 - 2015-12-11
+/*! Flexcomplete - v0.1.0 - 2015-12-15
 * https://github.com/thiago/flexcomplete
 * Copyright (c) 2015 Thiago Andrade; Licensed MIT */
 (function($) {
@@ -28,17 +28,12 @@
 
             event = createEvent(event);
 
-            var el = $(event.target);
-
-            // if (!el.hasClass("flexcomplete-line-common")) {
-            //     el = el.parents("div.flexcomplete-line-common");
-            // }
-
-            var inst = el.data(pInstance);
+            var $el = $(event.target),
+                inst = $el.data(pInstance);
 
             if (typeof inst !== 'undefined') {
 
-                inst.onSelect(el.data(pData), inst.input.get(0));
+                inst.onSelect($el.data(pData), inst.$input.get(0));
 
                 if (inst.isOpened()) {
                     inst.close();
@@ -47,19 +42,19 @@
         },
         mouseOver = function(event) {
 
-            var el = $(event.target);
+            var $el = $(event.target);
 
-            el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
+            $el = $el.is('.flexcomplete-line') ? $el : $el.find('.flexcomplete-line:first');
 
-            el.addClass("active");
+            $el.addClass("active");
         },
         mouseOut = function(event) {
 
-            var el = $(event.target);
+            var $el = $(event.target);
 
-            el = el.is('.flexcomplete-line') ? el : el.find('.flexcomplete-line:first');
+            $el = $el.is('.flexcomplete-line') ? $el : $el.find('.flexcomplete-line:first');
 
-            el.removeClass("active");
+            $el.removeClass("active");
         },
         gainFocus = function(inst, event) {
 
@@ -105,8 +100,8 @@
         },
         drawFather = function(inst, filteredDataArray) {
 
-            var position = inst.input.offset();
-            var altura = inst.input.outerHeight();
+            var position = inst.$input.offset();
+            var altura = inst.$input.outerHeight();
 
             inst.children = [];
             inst.parentIndex = -1;
@@ -115,7 +110,7 @@
                 inst.parentEl.remove();
             }
 
-            inst.parentEl = $('<div class="flexcomplete-parent list-group"></div>')
+            inst.parentEl = $('<ul class="flexcomplete-parent list-group"></ul>')
                 .css({
                     display: 'none',
                     top: (position.top + altura) + 'px',
@@ -142,7 +137,7 @@
 
             if (inst.children.length === 1 && inst.selectIfOneResult === true) {
 
-                inst.onSelect(inst.children[0].data(pData), inst.input.get(0));
+                inst.onSelect(inst.children[0].data(pData), inst.$input.get(0));
 
                 if (inst.isOpened()) {
                     inst.close();
@@ -157,7 +152,7 @@
 
             if (inst.scheduler.executed !== true) {
 
-                if ($.trim(inst.input.val()).length === 0 || $.trim(inst.input.val()).length < inst.startIn) {
+                if ($.trim(inst.$input.val()).length === 0 || $.trim(inst.$input.val()).length < inst.startIn) {
 
                     if (inst.isOpened()) {
                         inst.close();
@@ -167,7 +162,7 @@
                 }
 
                 var extraParamsTemp = {};
-                extraParamsTemp[inst.queryVar] = inst.processInput(inst.input.val());
+                extraParamsTemp[inst.queryVar] = inst.processInput(inst.$input.val());
 
                 if (typeof inst.extraParams === 'object') {
 
@@ -177,7 +172,9 @@
 
                 } else if (typeof inst.extraParams === 'function') {
 
-                    $.each(inst.extraParams(), function(key, param) {
+                    var obj = inst.extraParams(inst);
+
+                    $.each(obj, function(key, param) {
                         extraParamsTemp[key] = $.isFunction(param) ? param() : param;
                     });
 
@@ -187,7 +184,7 @@
 
                 if (inst.staticDataSearch === true) {
 
-                    var arrData = inst.filter(inst.data, inst.input.get(0));
+                    var arrData = inst.filter(inst.data, inst.$input.val());
 
                     drawFather(inst, arrData);
 
@@ -251,7 +248,7 @@
                 } else if (key === KEY_ENTER) {
 
                     if (inst.parentIndex >= 0) {
-                        inst.onSelect(inst.children[inst.parentIndex].data(pData), inst.input.get(0));
+                        inst.onSelect(inst.children[inst.parentIndex].data(pData), inst.$input.get(0));
                     }
                     if (inst.isOpened()) {
                         inst.close();
@@ -262,7 +259,7 @@
             }
 
             if (inst.autoReplacing === true && inst.parentIndex >= 0 && inst.children.length >= 1) {
-                inst.input.val(inst.getInputValue(inst.children[inst.parentIndex].data(pData)));
+                inst.$input.val(inst.getAutoreplacingInputValue(inst.children[inst.parentIndex].data(pData)));
             }
 
             inst.open();
@@ -295,7 +292,7 @@
                 return;
             }
 
-            if ($.trim(inst.input.val()).length === 0 || $.trim(inst.input.val()).length < inst.startIn) {
+            if ($.trim(inst.$input.val()).length === 0 || $.trim(inst.$input.val()).length < inst.startIn) {
 
                 if (inst.isOpened()) {
                     inst.close();
@@ -376,18 +373,18 @@
                 throw new Error("No database set. Please, set the offline data or an url");
             }
 
-            this.width = typeof this.width !== 'undefined' && this.width !== null ? this.width : this.input.outerWidth();
+            this.width = typeof this.width !== 'undefined' && this.width !== null ? this.width : this.$input.outerWidth();
 
             this.children = [];
             this.parentIndex = -1;
 
-            if (typeof this.input.data(pInstance) === 'undefined') {
-                this.input.data(pInstance, this);
+            if (typeof this.$input.data(pInstance) === 'undefined') {
+                this.$input.data(pInstance, this);
             }
 
-            this.input.attr('autocomplete', 'off');
+            this.$input.attr('autocomplete', 'off');
 
-            this.input
+            this.$input
                 .bind('keyup.Flexcomplete', function(e) {
                     schedule(inst, e);
                 })
@@ -406,7 +403,7 @@
 
         select: function(obj) {
 
-            this.onSelect(obj, this.input.get(0));
+            this.onSelect(obj, this.$input.get(0));
         },
 
         close: function(event) {
@@ -436,7 +433,7 @@
 
             return schedule(this, {
                 type: 'keyup',
-                target: this.input,
+                target: this.$input,
                 ascii: KEY_DO_SEARCH
             });
         },
@@ -461,17 +458,17 @@
         unload: function() {
 
             this.close();
-            this.input.unbind('keyup.Flexcomplete', schedule);
-            this.input.unbind('keydown.Flexcomplete', forwardNavigation);
-            this.input.unbind('focus.Flexcomplete', gainFocus);
-            this.input.unbind('blur.Flexcomplete', looseFocus);
+            this.$input.unbind('keyup.Flexcomplete', schedule);
+            this.$input.unbind('keydown.Flexcomplete', forwardNavigation);
+            this.$input.unbind('focus.Flexcomplete', gainFocus);
+            this.$input.unbind('blur.Flexcomplete', looseFocus);
 
             if (typeof this.parentEl !== 'undefined') {
                 this.parentEl.empty();
                 this.parentEl.remove();
             }
 
-            this.input.removeData(pInstance);
+            this.$input.removeData(pInstance);
         }
     });
 
@@ -510,7 +507,7 @@
                         $.each(options, function(i, item) {
                             opt[i] = item;
                         });
-                        opt.input = $(this);
+                        opt.$input = $(this);
 
                         flex.load(opt);
                         $(this).data(pInstance, flex);
@@ -554,13 +551,10 @@
         onSelect: function(value, input) {
             input.value = value;
         },
-        getLine: function(line) {
-            return line;
+        getLine: function(value) {
+            return value;
         },
-        getFullText: function(obj) {
-            return obj;
-        },
-        getInputValue: function(value) {
+        getAutoreplacingInputValue: function(value) {
             return value;
         },
         matches: function(value, userSearch, re) {
@@ -587,7 +581,6 @@
         startIn: 1,
         width: null,
         selectIfOneResult: false,
-        staticDataSearch: false,
         extraParams: {},
         autoReplacing: false
     };
