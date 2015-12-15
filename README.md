@@ -1,6 +1,6 @@
 # Flexcomplete
 
-A flexible autocomplete plugin for jQuery
+A flexible autocomplete plugin for jQuery. It works with online and offline data.
 
 ## Getting Started
 Download the [production version][min] or the [development version][max].
