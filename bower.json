@@ -1,0 +1,34 @@
+{
+  "name": "flexcomplete",
+  "description": "jQuery Autocomplete plugin flexible",
+  "main": "src/jquery.flexcomplete.js",
+  "authors": [
+    "Thiago Andrade <thiagoh@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "autocomplete",
+    "jquery",
+    "flexcomplete",
+    "flex",
+    "auto",
+    "search",
+    "list",
+    "plugin",
+    "complete",
+    "dynamic",
+    "offline",
+    "data"
+  ],
+  "homepage": "https://github.com/thiagoh/flexcomplete",
+  "moduleType": [
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
