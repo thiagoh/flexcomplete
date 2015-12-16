@@ -27,7 +27,16 @@ jQuery(function($) {
 ```
 
 ## API
-_(Coming soon)_
+
+_comming soon_
+```js
+$('#myObject').flexcomplete('search');
+```
+
+_comming soon_
+```js
+$('#myObject').flexcomplete('destroy');
+```
 
 To change flexcomplete behaviour globally you must override the `$.flexcomplete.options` object. See below the option keys, their default values and their description.
 
