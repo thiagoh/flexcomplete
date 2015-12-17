@@ -28,6 +28,7 @@ jQuery(function($) {
 
 ## API
 
+
 _comming soon_
 ```js
 $('#myObject').flexcomplete('search');
@@ -35,7 +36,38 @@ $('#myObject').flexcomplete('search');
 
 _comming soon_
 ```js
+$('#myObject').flexcomplete('open');
+```
+
+_comming soon_
+```js
+$('#myObject').flexcomplete('close');
+```
+
+_comming soon_
+```js
+$('#myObject').flexcomplete('select');
+```
+
+_comming soon_
+```js
+$('#myObject').flexcomplete('extend');
+// or
+$('#myObject').flexcomplete('options');
+```
+
+_comming soon_
+```js
 $('#myObject').flexcomplete('destroy');
+// or
+$('#myObject').flexcomplete('unload');
+```
+
+_comming soon_
+```js
+$('#myObject').flexcomplete('staticData', data);
+// or
+$('#myObject').flexcomplete('sdata', data);
 ```
 
 To change flexcomplete behaviour globally you must override the `$.flexcomplete.options` object. See below the option keys, their default values and their description.
