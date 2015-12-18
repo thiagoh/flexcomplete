@@ -31,7 +31,7 @@ jQuery(function($) {
 
 _comming soon_
 ```js
-$('#myObject').flexcomplete('search');
+$('#myObject').flexcomplete('search', searchQuery);
 ```
 
 _comming soon_
