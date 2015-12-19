@@ -4,9 +4,32 @@
     "type": "git",
     "url": "git://github.com/thiago/flexcomplete.git"
   },
-  "bugs": "https://github.com/thiago/flexcomplete/issues",
+  "homepage": "https://github.com/thiagoh/flexcomplete",
+  "author": {
+    "name": "Thiago Andrade",
+    "email": "thiagoh@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/thiagoh/flexcomplete/issues"
+  },
   "license": "MIT",
   "version": "0.2.0",
+  "keywords": [
+    "autocomplete",
+    "jquery",
+    "flexcomplete",
+    "flex",
+    "auto",
+    "search",
+    "list",
+    "plugin",
+    "complete",
+    "dynamic",
+    "offline",
+    "data",
+    "jquery-plugin",
+    "ecosystem:jquery"
+  ],
   "engines": {
     "node": ">= 0.8.0"
   },
