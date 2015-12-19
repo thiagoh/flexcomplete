@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"flex",
+				"flexcomplete"
+			],
+			[
+				"testChildren_by_",
+				"testChildren_by_search_function"
+			],
+			[
+				"pro",
+				"promise"
+			],
+			[
+				"sear",
+				"searchQuery"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"type",
+				"typeof"
+			],
+			[
 				"filte",
 				"filteredData"
 			],
@@ -14,10 +38,6 @@
 			[
 				"data",
 				"dataByName"
-			],
-			[
-				"pro",
-				"prototype"
 			],
 			[
 				"in",
@@ -177,10 +197,6 @@
 			],
 			[
 				"Value",
-				"valueAccumulatorType"
-			],
-			[
-				"val",
 				"valueAccumulatorType"
 			],
 			[
@@ -407,7 +423,7 @@
 			"file": "test/flexcomplete_test.js",
 			"settings":
 			{
-				"buffer_size": 5061,
+				"buffer_size": 6834,
 				"line_ending": "Unix"
 			}
 		},
@@ -415,15 +431,15 @@
 			"file": "src/jquery.flexcomplete.js",
 			"settings":
 			{
-				"buffer_size": 17041,
+				"buffer_size": 17338,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "README.md",
+			"file": "package.json",
 			"settings":
 			{
-				"buffer_size": 2640,
+				"buffer_size": 989,
 				"line_ending": "Unix"
 			}
 		}
@@ -434,6 +450,10 @@
 		"height": 138.0,
 		"selected_items":
 		[
+			[
+				"brow",
+				"View In Browser"
+			],
 			[
 				"markdw previ",
 				"Markdown Preview: Preview in Browser"
@@ -676,10 +696,11 @@
 	},
 	"file_history":
 	[
-		"/home/thiago/dev/javascript/flexcomplete/src/flexcomplete.css",
 		"/home/thiago/dev/javascript/flexcomplete/package.json",
 		"/home/thiago/dev/javascript/flexcomplete/flexcomplete.jquery.json",
+		"/home/thiago/dev/javascript/flexcomplete/bower.json",
 		"/home/thiago/dev/javascript/flexcomplete/README.md",
+		"/home/thiago/dev/javascript/flexcomplete/src/flexcomplete.css",
 		"/home/thiago/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
 		"/home/thiago/.cache/.fr-WbPgkD/jquery-1.0.1/src/jquery/jquery.js",
 		"/home/thiago/.cache/.fr-2Y6gUa/ckeditor-dev-4.5.6/gruntfile.js",
@@ -802,8 +823,7 @@
 		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/ehcache/liferay-multi-vm-clustered.xml",
 		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/com/liferay/portal/service/impl/ImageLocalServiceImpl.java",
 		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/META-INF/util-spring.xml",
-		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/com/liferay/portal/webserver/WebServerServletTokenImpl.java",
-		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/bin/META-INF/util-spring.xml"
+		"/home/thiago/dev/java/liferay-portal-src-6.1.2-ce-ga3/portal-impl/src/com/liferay/portal/webserver/WebServerServletTokenImpl.java"
 	],
 	"find":
 	{
@@ -827,9 +847,23 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"\"license\": \"MIT\",",
+			"co-work",
+			"onSelect",
+			"inst.scheduler.executed = true",
+			"inst.scheduler.executed",
+			"data(pInstance",
+			"pInstance",
+			"PROP_INSTANCE_NAME",
+			"testchi",
+			"ajax",
+			"trim",
+			"schedule",
+			"search",
+			"input.val",
 			"extraParams",
 			"staticDataSearch",
 			"filter",
@@ -943,21 +977,7 @@
 			"_filter",
 			"filter(",
 			"filter",
-			"filter(",
-			"filter",
-			"antonio",
-			",",
-			"PROP_INSTANCE_NAME",
-			"'body'",
-			"_parent",
-			"_parentIndex",
-			"_arrayFather",
-			"drawFather",
-			"search",
-			"KEY_DO_SEARCH",
-			"search",
-			"_schedule",
-			"keyup"
+			"filter("
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -965,6 +985,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"pInstance",
 			"$input",
 			"getAutoreplacingInputValue",
 			"active",
@@ -1223,15 +1244,15 @@
 					"file": "test/flexcomplete_test.js",
 					"settings":
 					{
-						"buffer_size": 5061,
+						"buffer_size": 6834,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5061,
-								5061
+								4610,
+								4610
 							]
 						],
 						"settings":
@@ -1380,7 +1401,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2167.0,
+						"translation.y": 2263.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1390,15 +1411,15 @@
 					"file": "src/jquery.flexcomplete.js",
 					"settings":
 					{
-						"buffer_size": 17041,
+						"buffer_size": 17338,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5331,
-								5331
+								4554,
+								4554
 							]
 						],
 						"settings":
@@ -1547,25 +1568,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2447.0,
+						"translation.y": 2807.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "README.md",
+					"file": "package.json",
 					"settings":
 					{
-						"buffer_size": 2640,
+						"buffer_size": 989,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1299,
-								1299
+								360,
+								360
 							]
 						],
 						"settings":
@@ -1676,7 +1697,6 @@
 								"trailing": true,
 								"wsh": true
 							},
-							"parser": "github",
 							"pep8": true,
 							"pep8_ignore":
 							[
@@ -1709,11 +1729,12 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Markdown/Markdown.tmLanguage",
-							"target": "disk"
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 504.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
