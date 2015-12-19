@@ -21,7 +21,7 @@
         throws(block, [expected], [message])
     */
 
-    var PROP_INSTANCE_NAME = 'Flexcomplete.instance';
+    var pInstance = 'Flexcomplete.instance';
     var data = [
         'sujeito único',
         'antonio braga',
@@ -73,19 +73,19 @@
         strictEqual(flexcompletes, this.elems, 'should be chainable');
 
         this.elems.get().forEach(function(item) {
-            var flexcomplete = $(item).data(PROP_INSTANCE_NAME);
+            var flexcomplete = $(item).data(pInstance);
             notEqual(flexcomplete, undefined);
         });
 
         this.elems.unflexcomplete();
 
         this.elems.get().forEach(function(item) {
-            var flexcomplete = $(item).data(PROP_INSTANCE_NAME);
+            var flexcomplete = $(item).data(pInstance);
             equal(flexcomplete, undefined);
         });
     });
 
-    function testChildren(elems, searchString) {
+    function testChildren_by_input_val(elems, searchString) {
 
         // Not a bad test to run on collection methods.
         function matches(item) {
@@ -106,13 +106,13 @@
             item = $(item);
             item.val(searchString).focus();
 
-            var instance = item.data(PROP_INSTANCE_NAME);
+            var instance = item.data(pInstance);
 
             asyncTest('are children being filled correctly one by one', function(assert) {
 
                 setTimeout(function() {
 
-                    notEqual(instance.parentEl, undefined, "The parent div should be present at the body");
+                    ok(typeof instance.parentEl !== 'undefined', "The parent div should be present at the body");
 
                     var children = instance.parentEl.find('.flexcomplete-line');
 
@@ -131,14 +131,66 @@
         strictEqual(flexcompletes, elems, 'should be chainable');
     }
 
-    test('are children being filled correctly [unique element]', function() {
+    function testChildren_by_search_function(elems, searchString) {
 
-        testChildren(this.elems, 'único');
+        // Not a bad test to run on collection methods.
+        function matches(item) {
+            return item.indexOf(searchString) >= 0 ? true : false;
+        }
+
+        var flexcompletes = elems.flexcomplete({
+                data: data,
+                matches: matches,
+                delay: 1
+            }),
+            count = data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index]) ? 1 : 0);
+            }, 0);
+
+        elems.get().forEach(function(item) {
+
+            var instance = $(item).data(pInstance);
+
+            asyncTest('are children being filled correctly one by one', function(assert) {
+
+                $(item).flexcomplete('search', searchString).then(function() {
+
+                    notEqual(instance.parentEl, undefined, "The parent div should be present at the body");
+
+                    var children = instance.parentEl.find('.flexcomplete-line');
+
+                    equal(children.length, count, "There should be at least one result");
+
+                    children.get().forEach(function(child) {
+                        ok(matches($(child).text()) === true);
+                    });
+
+                    start();
+                });
+            });
+        });
+
+        strictEqual(flexcompletes, elems, 'should be chainable');
+    }
+
+    test('are children being filled correctly (input value) [unique element]', function() {
+
+        testChildren_by_input_val(this.elems, 'único');
     });
 
-    test('are children being filled correctly [many elements]', function() {
+    test('are children being filled correctly (input value) [many elements]', function() {
 
-        testChildren(this.elems, 'thiago');
+        testChildren_by_input_val(this.elems, 'thiago');
+    });
+
+    test('are children being filled correctly search function [unique element]', function() {
+
+        testChildren_by_search_function(this.elems, 'único');
+    });
+
+    test('are children being filled correctly search function [many elements]', function() {
+
+        testChildren_by_search_function(this.elems, 'thiago');
     });
 
 

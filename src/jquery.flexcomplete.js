@@ -31,10 +31,8 @@
         KEY_END = 35,
         choosingClick = function(event) {
 
-            event = createEvent(event);
-
-            var $el = $(event.target),
-                inst = $el.data(pInstance);
+            var $el = $(createEvent(event).target),
+                inst = $el.closest('.flexcomplete-parent').data(pInstance);
 
             if (typeof inst !== 'undefined') {
 
@@ -48,18 +46,12 @@
         mouseOver = function(event) {
 
             var $el = $(event.target);
-
-            $el = $el.is('.flexcomplete-line') ? $el : $el.find('.flexcomplete-line:first');
-
-            $el.addClass("active");
+            ($el.is('.flexcomplete-line') ? $el : $el.find('.flexcomplete-line:first')).addClass("active");
         },
         mouseOut = function(event) {
 
             var $el = $(event.target);
-
-            $el = $el.is('.flexcomplete-line') ? $el : $el.find('.flexcomplete-line:first');
-
-            $el.removeClass("active");
+            ($el.is('.flexcomplete-line') ? $el : $el.find('.flexcomplete-line:first')).removeClass("active");
         },
         gainFocus = function(inst, event) {
 
@@ -82,17 +74,19 @@
         },
         drawChilds = function(inst, filteredDataArray) {
 
+            var i = 0,
+                leni = filteredDataArray.length;
+
             inst.parentEl.empty();
 
-            for (var i = 0; i < filteredDataArray.length; i++) {
+            for (; i < leni; i++) {
 
-                var data = filteredDataArray[i];
-                var line = inst.getLine(data);
-                var divLine = $("<li class='flexcomplete-line list-group-item'></li>").append(line);
+                var data = filteredDataArray[i],
+                    line = inst.getLine(data),
+                    divLine = $("<li class='flexcomplete-line list-group-item'></li>").append(line);
 
-                inst.children[i] = divLine //$("<div align='left' class='flexcomplete-line-common'></div>")
+                inst.children[i] = divLine
                     .data(pData, data)
-                    .data(pInstance, inst)
                     .append(divLine)
                     .mousedown(choosingClick)
                     .mouseover(mouseOver)
@@ -105,8 +99,8 @@
         },
         drawFather = function(inst, filteredDataArray) {
 
-            var position = inst.$input.offset();
-            var altura = inst.$input.outerHeight();
+            var position = inst.$input.offset(),
+                altura = inst.$input.outerHeight();
 
             inst.children = [];
             inst.parentIndex = -1;
@@ -121,7 +115,8 @@
                     top: (position.top + altura) + 'px',
                     left: position.left + 'px',
                     width: inst.width + 'px'
-                });
+                })
+                .data(pInstance, inst);
 
             $('body').append(inst.parentEl);
 
@@ -149,72 +144,88 @@
                 }
             }
         },
-        search = function(inst, event) {
+        search = function(inst, value) {
 
             if (typeof inst.interval !== 'undefined') {
                 clearInterval(inst.interval);
             }
 
-            if (inst.scheduler.executed !== true) {
-
-                if ($.trim(inst.$input.val()).length === 0 || $.trim(inst.$input.val()).length < inst.startIn) {
-
-                    if (inst.isOpened()) {
-                        inst.close();
-                    }
-
-                    return false;
-                }
-
-                var extraParamsTemp = {};
-                extraParamsTemp[inst.queryVar] = inst.processInput(inst.$input.val());
-
-                if (typeof inst.extraParams === 'object') {
-
-                    $.each(inst.extraParams, function(key, param) {
-                        extraParamsTemp[key] = $.isFunction(param) ? param() : param;
-                    });
-
-                } else if (typeof inst.extraParams === 'function') {
-
-                    var obj = inst.extraParams(inst);
-
-                    $.each(obj, function(key, param) {
-                        extraParamsTemp[key] = $.isFunction(param) ? param() : param;
-                    });
-
-                } else {
-                    throw new Error("Extra params should be an object or a function");
-                }
-
-                if (inst.staticDataSearch === true) {
-
-                    var arrData = inst.filter(inst.data, inst.$input.val());
-
-                    drawFather(inst, arrData);
-
-                    inst.scheduler.executed = true;
-
-                } else {
-
-                    $.ajax({
-                        type: inst.method,
-                        dataType: 'json',
-                        url: inst.url,
-                        async: true,
-                        data: extraParamsTemp,
-                        success: function(data, status) {
-
-                            drawFather(inst, data);
-
-                            inst.scheduler.executed = true;
-                        },
-                        error: function(result) {
-                            throw new Error(result);
-                        }
-                    });
-                }
+            if (typeof value !== 'string') {
+                return;
             }
+
+            if ((inst.scheduler || {}).executed === true) {
+                return;
+            }
+
+            if (value.length < inst.startIn) {
+
+                if (inst.isOpened()) {
+                    inst.close();
+                }
+
+                return;
+            }
+
+            var deferred = $.Deferred(),
+                extraParamsTemp = {};
+
+            extraParamsTemp[inst.queryVar] = inst.processInput(value);
+
+            if (typeof inst.extraParams === 'object') {
+
+                $.each(inst.extraParams, function(key, param) {
+                    extraParamsTemp[key] = $.isFunction(param) ? param() : param;
+                });
+
+            } else if (typeof inst.extraParams === 'function') {
+
+                $.each(inst.extraParams(inst), function(key, param) {
+                    extraParamsTemp[key] = $.isFunction(param) ? param() : param;
+                });
+
+            } else if (typeof inst.extraParams !== 'undefined') {
+
+                deferred.reject("Extra params should be an object, function or undefined");
+                return deferred.promise();
+            }
+
+            if (inst.staticDataSearch === true) {
+
+                deferred.resolve(inst.filter(inst.data, value));
+
+            } else {
+
+                $.ajax({
+                    type: inst.method,
+                    dataType: 'json',
+                    url: inst.url,
+                    async: true,
+                    data: extraParamsTemp,
+                    success: function(data, status) {
+                        deferred.resolve(data);
+                    },
+                    error: function(result) {
+                        deferred.reject(result);
+                    }
+                });
+            }
+
+            deferred.then(function(data) {
+
+                if (typeof inst.scheduler === 'object') {
+                    inst.scheduler.executed = true;
+                }
+
+                drawFather(inst, data);
+
+            }, function(result) {
+                if (typeof console !== 'undefined') {
+                    console.error(result);
+                }
+            });
+
+            return deferred.promise();
         },
         navigate = function(inst, event) {
 
@@ -291,22 +302,18 @@
         },
         schedule = function(inst, event) {
 
+            if (typeof event === 'undefined') {
+                return false;
+            }
+
             event = createEvent(event);
 
             if (isNavigation(event) !== false) {
-                return;
+                return false;
             }
 
-            if ($.trim(inst.$input.val()).length === 0 || $.trim(inst.$input.val()).length < inst.startIn) {
-
-                if (inst.isOpened()) {
-                    inst.close();
-                }
-
-                return;
-            }
-
-            var now = (new Date()).getTime();
+            var value = inst.$input.val(),
+                now = (new Date()).getTime();
 
             if (inst.scheduler && inst.scheduler.executed === true && inst.scheduler.timestamp + inst.delay < now) {
 
@@ -323,8 +330,7 @@
 
             /** se for um evento de foco nao esperar tempo nenhum */
             if (event.type.toLowerCase() === "focus") {
-                search(inst, event);
-                return;
+                return search(inst, value);
             }
 
             if (inst.interval) {
@@ -332,8 +338,10 @@
             }
 
             inst.interval = setInterval(function() {
-                search(inst, event);
+                search(inst, value);
             }, inst.delay);
+
+            return true;
         },
         createEvent = function(event) {
 
@@ -383,9 +391,9 @@
             this.children = [];
             this.parentIndex = -1;
 
-            if (typeof this.$input.data(pInstance) === 'undefined') {
-                this.$input.data(pInstance, this);
-            }
+            // if (typeof this.$input.data(pInstance) === 'undefined') {
+            //     this.$input.data(pInstance, this);
+            // }
 
             this.$input.attr('autocomplete', 'off');
 
@@ -434,13 +442,20 @@
             return this.opened;
         },
 
-        search: function() {
+        search: function(searchQuery) {
 
-            return schedule(this, {
-                type: 'keyup',
-                target: this.$input,
-                ascii: KEY_DO_SEARCH
-            });
+            if (typeof searchQuery === 'string' && $.trim(searchQuery) !== '') {
+
+                return search(this, searchQuery);
+
+            } else {
+
+                return schedule(this, {
+                    type: 'keyup',
+                    target: this.$input,
+                    ascii: KEY_DO_SEARCH
+                });
+            }
         },
 
         staticData: function(d) {

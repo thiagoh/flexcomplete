@@ -415,15 +415,15 @@
 			"file": "src/jquery.flexcomplete.js",
 			"settings":
 			{
-				"buffer_size": 17191,
+				"buffer_size": 17041,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/flexcomplete.css",
+			"file": "README.md",
 			"settings":
 			{
-				"buffer_size": 210,
+				"buffer_size": 2640,
 				"line_ending": "Unix"
 			}
 		}
@@ -431,9 +431,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 117.0,
+		"height": 138.0,
 		"selected_items":
 		[
+			[
+				"markdw previ",
+				"Markdown Preview: Preview in Browser"
+			],
 			[
 				"install",
 				"Package Control: Install Package"
@@ -672,6 +676,9 @@
 	},
 	"file_history":
 	[
+		"/home/thiago/dev/javascript/flexcomplete/src/flexcomplete.css",
+		"/home/thiago/dev/javascript/flexcomplete/package.json",
+		"/home/thiago/dev/javascript/flexcomplete/flexcomplete.jquery.json",
 		"/home/thiago/dev/javascript/flexcomplete/README.md",
 		"/home/thiago/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
 		"/home/thiago/.cache/.fr-WbPgkD/jquery-1.0.1/src/jquery/jquery.js",
@@ -679,17 +686,14 @@
 		"/home/thiago/.cache/.fr-fFS8rV/ckeditor-dev-4.5.6/plugins/find/dialogs/find.js",
 		"/home/thiago/.cache/.fr-6tVu5n/ckeditor/ckeditor.js",
 		"/home/thiago/dev/fac/recife/svn-update.sh",
-		"/home/thiago/dev/javascript/flexcomplete/src/flexcomplete.css",
 		"/home/thiago/dev/javascript/flexcomplete/dist/jquery.flexcomplete.min.js",
 		"/home/thiago/dev/javascript/flexcomplete/demo/simple.js",
 		"/home/thiago/dev/javascript/flexcomplete/test/flexcomplete.html",
 		"/home/thiago/dev/javascript/flexcomplete/test/.jshintrc",
-		"/home/thiago/dev/javascript/flexcomplete/package.json",
 		"/home/thiago/dev/javascript/flexcomplete/libs/qunit/qunit.css",
 		"/home/thiago/dev/javascript/dep-flexcomplete/example/app.js",
 		"/home/thiago/dev/javascript/flexcomplete/src/.jshintrc",
 		"/home/thiago/dev/javascript/flexcomplete/Gruntfile.js",
-		"/home/thiago/dev/javascript/flexcomplete/flexcomplete.jquery.json",
 		"/home/thiago/dev/javascript/dep-flexcomplete/lib/flexcomplete.js",
 		"/home/thiago/dev/javascript/flexcomplete/src/jquery.flexcomplete.js",
 		"/home/thiago/dev/javascript/dep-flexcomplete/package.json",
@@ -823,9 +827,22 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"extraParams",
+			"staticDataSearch",
+			"filter",
+			"input",
+			"input =",
+			"input",
+			"filter",
+			"getInputValue",
+			"onSelect",
+			"getInputValue",
+			"getFullText",
+			"getLine",
+			"processInput",
 			"drawChilds",
 			"html(",
 			"children",
@@ -940,20 +957,7 @@
 			"KEY_DO_SEARCH",
 			"search",
 			"_schedule",
-			"keyup",
-			"_gainFocus",
-			"onUnload",
-			"onLoad",
-			"onClose",
-			"_onClose",
-			"drawFather",
-			"open",
-			"focus",
-			"open",
-			"|| options",
-			"focus",
-			"console.",
-			"console.l"
+			"keyup"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -961,6 +965,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"$input",
+			"getAutoreplacingInputValue",
 			"active",
 			"parent",
 			"parentEl",
@@ -1042,7 +1048,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -1057,12 +1063,8 @@
 						"selection":
 						[
 							[
-								3522,
-								3522
-							],
-							[
-								4565,
-								4565
+								1447,
+								1447
 							]
 						],
 						"settings":
@@ -1211,7 +1213,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 455.0,
+						"translation.y": 132.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1388,15 +1390,15 @@
 					"file": "src/jquery.flexcomplete.js",
 					"settings":
 					{
-						"buffer_size": 17191,
+						"buffer_size": 17041,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15931,
-								15931
+								5331,
+								5331
 							]
 						],
 						"settings":
@@ -1545,25 +1547,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 9302.0,
+						"translation.y": 2447.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/flexcomplete.css",
+					"file": "README.md",
 					"settings":
 					{
-						"buffer_size": 210,
+						"buffer_size": 2640,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								166,
-								166
+								1299,
+								1299
 							]
 						],
 						"settings":
@@ -1674,6 +1676,7 @@
 								"trailing": true,
 								"wsh": true
 							},
+							"parser": "github",
 							"pep8": true,
 							"pep8_ignore":
 							[
@@ -1706,11 +1709,11 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"target": "disk"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 504.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
