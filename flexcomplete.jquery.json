@@ -14,14 +14,23 @@
     "url": "git://github.com/thiago/flexcomplete.git"
   },
   "bugs": "https://github.com/thiago/flexcomplete/issues",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/thiago/flexcomplete/blob/master/LICENSE-MIT"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/thiago/flexcomplete/blob/master/LICENSE-MIT"
+  }],
   "dependencies": {
-    "jquery": "1.2"
+    "jquery": ">=1.3"
   },
-  "keywords": ["autocomplete", "complete", "data", "offline", "search", "keypress", "keydown", "keyup"]
+  "keywords": [
+    "autocomplete",
+    "complete",
+    "data",
+    "offline",
+    "search",
+    "keypress",
+    "keydown",
+    "keyup",
+    "jquery-plugin",
+    "ecosystem:jquery"
+  ]
 }

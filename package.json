@@ -1,5 +1,11 @@
 {
-  "name": "jquery-plugin",
+  "name": "flexcomplete",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thiago/flexcomplete.git"
+  },
+  "bugs": "https://github.com/thiago/flexcomplete/issues",
+  "license": "MIT",
   "version": "0.1.0",
   "engines": {
     "node": ">= 0.8.0"

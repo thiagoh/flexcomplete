@@ -1,5 +1,5 @@
 {
-  "name": "Flexcomplete",
+  "name": "flexcomplete",
   "description": "jQuery Autocomplete plugin flexible",
   "main": "src/jquery.flexcomplete.js",
   "authors": [
@@ -18,7 +18,9 @@
     "complete",
     "dynamic",
     "offline",
-    "data"
+    "data",
+    "jquery-plugin",
+    "ecosystem:jquery"
   ],
   "homepage": "https://github.com/thiagoh/flexcomplete",
   "moduleType": [
