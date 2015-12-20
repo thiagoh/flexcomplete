@@ -21,6 +21,10 @@
         throws(block, [expected], [message])
     */
 
+    function matches(item, searchString) {
+        return item.indexOf(searchString) >= 0 ? true : false;
+    }
+
     var pInstance = 'Flexcomplete.instance';
     var data = [
         'sujeito único',
@@ -65,7 +69,7 @@
 
     test('is chainable', function() {
         //expect(1);
-        // Not a bad test to run on collection methods.
+
         var flexcompletes = this.elems.flexcomplete({
             data: data
         });
@@ -87,18 +91,13 @@
 
     function testChildren_by_input_val(elems, searchString) {
 
-        // Not a bad test to run on collection methods.
-        function matches(item) {
-            return item.indexOf(searchString) >= 0 ? true : false;
-        }
-
         var flexcompletes = elems.flexcomplete({
                 data: data,
                 matches: matches,
                 delay: 1
             }),
             count = data.reduce(function(previous, current, index, array) {
-                return previous + (matches(array[index]) ? 1 : 0);
+                return previous + (matches(array[index], searchString) ? 1 : 0);
             }, 0);
 
         elems.get().forEach(function(item) {
@@ -119,7 +118,7 @@
                     equal(children.length, count, "There should be at least one result");
 
                     children.get().forEach(function(child) {
-                        ok(matches($(child).text()) === true);
+                        ok(matches($(child).text(), searchString) === true);
                     });
 
                     start();
@@ -131,12 +130,7 @@
         strictEqual(flexcompletes, elems, 'should be chainable');
     }
 
-    function testChildren_by_search_function(elems, searchString) {
-
-        // Not a bad test to run on collection methods.
-        function matches(item) {
-            return item.indexOf(searchString) >= 0 ? true : false;
-        }
+    function test_search_function(elems, searchString) {
 
         var flexcompletes = elems.flexcomplete({
                 data: data,
@@ -144,7 +138,7 @@
                 delay: 1
             }),
             count = data.reduce(function(previous, current, index, array) {
-                return previous + (matches(array[index]) ? 1 : 0);
+                return previous + (matches(array[index], searchString) ? 1 : 0);
             }, 0);
 
         elems.get().forEach(function(item) {
@@ -153,20 +147,21 @@
 
             asyncTest('are children being filled correctly one by one', function(assert) {
 
-                $(item).flexcomplete('search', searchString).then(function() {
+                $(item).flexcomplete('search', searchString)
+                    .then(function() {
 
-                    notEqual(instance.parentEl, undefined, "The parent div should be present at the body");
+                        notEqual(instance.parentEl, undefined, "The parent div should be present at the body");
 
-                    var children = instance.parentEl.find('.flexcomplete-line');
+                        var children = instance.parentEl.find('.flexcomplete-line');
 
-                    equal(children.length, count, "There should be at least one result");
+                        equal(children.length, count, "There should be at least one result");
 
-                    children.get().forEach(function(child) {
-                        ok(matches($(child).text()) === true);
+                        children.get().forEach(function(child) {
+                            ok(matches($(child).text(), searchString) === true);
+                        });
+
+                        start();
                     });
-
-                    start();
-                });
             });
         });
 
@@ -185,14 +180,51 @@
 
     test('are children being filled correctly search function [unique element]', function() {
 
-        testChildren_by_search_function(this.elems, 'único');
+        test_search_function(this.elems, 'único');
     });
 
     test('are children being filled correctly search function [many elements]', function() {
 
-        testChildren_by_search_function(this.elems, 'thiago');
+        test_search_function(this.elems, 'thiago');
     });
 
+    test('are children being filled correctly select function [many elements]', function() {
+
+        var flexcompletes = this.elems.flexcomplete({
+                data: data,
+                matches: matches,
+                delay: 1
+            }),
+            searchString = "an",
+            count = data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index], searchString) ? 1 : 0);
+            }, 0);
+
+        this.elems.get().forEach(function(item) {
+
+            var instance = $(item).data(pInstance);
+
+            asyncTest('are children being filled correctly one by one', function(assert) {
+
+                $(item).flexcomplete('search', searchString)
+                    .then(function() {
+
+                        var arr = [].slice.call(instance.children);
+
+                        for (var i = 0; i < arr.length; i++) {
+
+                            $(item).flexcomplete('select', i);
+
+                            equal(instance.$input.val(), arr[i], "The input value should be " + arr[i] + " but is " + instance.$input.val());
+                        }
+
+                        start();
+                    });
+            });
+        });
+
+        strictEqual(flexcompletes, this.elems, 'should be chainable');
+    });
 
     // test('is awesome', function() {
     //     expect(1);

@@ -72,7 +72,7 @@
                 k === KEY_TO_RIGHT || k === KEY_ENTER || k === KEY_PAGE_UP ||
                 k === KEY_PAGE_DOWN || k === KEY_ESC || k === KEY_HOME || k === KEY_END;
         },
-        drawChilds = function(inst, filteredDataArray) {
+        drawChildren = function(inst, filteredDataArray) {
 
             var i = 0,
                 leni = filteredDataArray.length;
@@ -97,7 +97,7 @@
 
             return inst;
         },
-        drawFather = function(inst, filteredDataArray) {
+        drawParent = function(inst, filteredDataArray) {
 
             var position = inst.$input.offset(),
                 altura = inst.$input.outerHeight();
@@ -128,7 +128,7 @@
 
                 inst.parentEl.show();
 
-                drawChilds(inst, filteredDataArray).open();
+                drawChildren(inst, filteredDataArray).open();
 
             } else {
 
@@ -217,7 +217,7 @@
                     inst.scheduler.executed = true;
                 }
 
-                drawFather(inst, data);
+                drawParent(inst, data);
 
             }, function(result) {
                 if (typeof console !== 'undefined') {
@@ -414,9 +414,19 @@
             return this;
         },
 
-        select: function(obj) {
+        select: function(index) {
 
-            this.onSelect(obj, this.$input.get(0));
+            if (typeof index === 'undefined') {
+                return;
+            }
+
+            var object = (this.children || [])[index];
+
+            if (typeof object === 'undefined') {
+                return;
+            }
+
+            this.onSelect(object, this.$input.get(0));
         },
 
         close: function(event) {
