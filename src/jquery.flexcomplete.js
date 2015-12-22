@@ -168,25 +168,44 @@
             }
 
             var deferred = $.Deferred(),
-                extraParamsTemp = {};
+                _params = {},
+                _headers = {};
 
-            extraParamsTemp[inst.queryVar] = inst.processInput(value);
+            _params[inst.queryVar] = inst.processInput(value);
 
-            if (typeof inst.extraParams === 'object') {
+            if (typeof inst.params === 'object') {
 
-                $.each(inst.extraParams, function(key, param) {
-                    extraParamsTemp[key] = $.isFunction(param) ? param() : param;
+                $.each(inst.params, function(key, param) {
+                    _params[key] = $.isFunction(param) ? param() : param;
                 });
 
-            } else if (typeof inst.extraParams === 'function') {
+            } else if (typeof inst.params === 'function') {
 
-                $.each(inst.extraParams(inst), function(key, param) {
-                    extraParamsTemp[key] = $.isFunction(param) ? param() : param;
+                $.each(inst.params(inst), function(key, param) {
+                    _params[key] = $.isFunction(param) ? param() : param;
                 });
 
-            } else if (typeof inst.extraParams !== 'undefined') {
+            } else if (typeof inst.params !== 'undefined') {
 
                 deferred.reject("Extra params should be an object, function or undefined");
+                return deferred.promise();
+            }
+
+            if (typeof inst.headers === 'object') {
+
+                $.each(inst.headers, function(key, param) {
+                    _headers[key] = $.isFunction(param) ? param() : param;
+                });
+
+            } else if (typeof inst.headers === 'function') {
+
+                $.each(inst.headers(inst), function(key, param) {
+                    _headers[key] = $.isFunction(param) ? param() : param;
+                });
+
+            } else if (typeof inst.headers !== 'undefined') {
+
+                deferred.reject("Headers should be an object, function or undefined");
                 return deferred.promise();
             }
 
@@ -197,16 +216,17 @@
             } else {
 
                 $.ajax({
-                    type: inst.method,
-                    dataType: 'json',
+                    type: (inst.httpMethod || inst.method),
+                    dataType: inst.dataType,
                     url: inst.url,
                     async: true,
-                    data: extraParamsTemp,
+                    data: _params,
+                    headers: _headers,
                     success: function(data, status) {
                         deferred.resolve(data);
                     },
-                    error: function(result) {
-                        deferred.reject(result);
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        deferred.reject(textStatus + ": " + errorThrown);
                     }
                 });
             }
@@ -390,6 +410,7 @@
 
             this.children = [];
             this.parentIndex = -1;
+            this.params = this.params || this.extraParams;
 
             // if (typeof this.$input.data(pInstance) === 'undefined') {
             //     this.$input.data(pInstance, this);
@@ -574,7 +595,8 @@
     // Static method default options.
     $.flexcomplete.options = {
         queryVar: "q",
-        method: "GET",
+        dataType: "json",
+        httpMethod: "GET",
         processInput: function(value) {
             return value;
         },
@@ -611,7 +633,8 @@
         startIn: 1,
         width: null,
         selectIfOneResult: false,
-        extraParams: {},
+        params: {},
+        headers: {},
         autoReplacing: false
     };
 

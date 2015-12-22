@@ -264,9 +264,7 @@
 
         var searchString = "an",
             flexcompletes = this.elems.flexcomplete({
-                url: 'http://localhost:3000/data/test1',
-                matches: matches,
-                delay: 1
+                url: 'http://localhost:3000/data/super-heroes'
             });
 
         test_select_function(this.elems, searchString);
