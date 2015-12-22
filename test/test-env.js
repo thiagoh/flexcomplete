@@ -6,44 +6,47 @@
 
         var express = require('express'),
             http = require('https'),
+            _ = require('underscore'),
+            fs = require('fs'),
             app = express(),
             data1Path = "/data/test1",
-            agent = new http.Agent({
+            readline = require('readline'),
+            superHeroes = [];
 
-            });
+        fs.readFile('./test/super-heroes.data', function(err, data) {
+            if (err) {
+                throw err;
+            }
 
-        app.get(data1Path, function(req, res) {
+            superHeroes = data.toString('utf8').split('\n');
 
-            var result = '';
+            app.get(data1Path, function(req, res) {
 
-            http.get({
-                hostname: 'api.github.com',
-                port: 443,
-                //path: '/users/jeresig/followers',
-                path: '/users/ericelliott/followers',
-                headers: {
-                    'User-Agent': 'thiagoh'
+                var result = '',
+                    searchQuery = (req.query.q || '').trim();
+
+                if (searchQuery === '') {
+                    res.status(404).end("No such search query");
+                    return;
                 }
-            }, function(httpResponse) {
 
-                httpResponse.on('data', function(chunk) {
-                    result += chunk;
+                res.type('json'); // => 'application/json'
+                res.status(200);
+
+                var heroes = _.filter(superHeroes, function(curHero) {
+                    return curHero.indexOf(searchQuery) >= 0;
                 });
-                httpResponse.on('end', function() {
-                    res.type('json');               // => 'application/json'
-                    res.status(200);
-                    res.json(JSON.parse(result));
-                });
-            }).on('error', function(e) {
-                console.log("Got error: " + e.message);
+
+                res.json(heroes);
+                res.end();
             });
-        });
 
-        var server = app.listen(3000, function() {
-            var host = server.address().address;
-            var port = server.address().port;
+            var server = app.listen(3000, function() {
+                var host = server.address().address;
+                var port = server.address().port;
 
-            console.log('Example app listening at http://%s:%s', host, port);
+                console.log('Example app listening at http://%s:%s', host, port);
+            });
         });
     };
 

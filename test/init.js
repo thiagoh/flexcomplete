@@ -1,4 +1,1 @@
-
-var test = require('./test-env.js');
-
-test.init();
+require('./test-env.js').init();
