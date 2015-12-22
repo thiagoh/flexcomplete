@@ -26,44 +26,44 @@
     }
 
     var pInstance = 'Flexcomplete.instance';
-    var data = [
-        'sujeito único',
-        'antonio braga',
-        'bruno henrique',
-        'bruno braga',
-        'walmor cesar',
-        'breno nunes',
-        'd\'alia',
-        'toto-tata',
-        'jogo#velha',
-        'email@email.com',
-        'carlos leite',
-        'paulo amorim',
-        'raphael praxedes',
-        'thiago andrade',
-        'thiago amaral',
-        'thiago souza',
-        'thiago leite',
-        'thiago cavalcanti',
-        'thiago ferreira',
-        'thiago braga',
-        'thiago castro',
-        'thiago lima',
-        'thiago aragão',
-        'thiago alencar',
-        'thiago assis',
-        'hugo fernando',
-        'danilo lima',
-        'ronaldo nobrega',
-        'kleber xavier',
-        'andré barros',
-        'roberta almeida'
-    ];
 
     module('jQuery#flexcomplete', {
         // This will run before each test in this module.
         setup: function() {
             this.elems = $('[flexcomplete]');
+            this.data = [
+                'sujeito único',
+                'antonio braga',
+                'bruno henrique',
+                'bruno braga',
+                'walmor cesar',
+                'breno nunes',
+                'd\'alia',
+                'toto-tata',
+                'jogo#velha',
+                'email@email.com',
+                'carlos leite',
+                'paulo amorim',
+                'raphael praxedes',
+                'thiago andrade',
+                'thiago amaral',
+                'thiago souza',
+                'thiago leite',
+                'thiago cavalcanti',
+                'thiago ferreira',
+                'thiago braga',
+                'thiago castro',
+                'thiago lima',
+                'thiago aragão',
+                'thiago alencar',
+                'thiago assis',
+                'hugo fernando',
+                'danilo lima',
+                'ronaldo nobrega',
+                'kleber xavier',
+                'andré barros',
+                'roberta almeida'
+            ];
         }
     });
 
@@ -71,7 +71,7 @@
         //expect(1);
 
         var flexcompletes = this.elems.flexcomplete({
-            data: data
+            data: this.data
         });
 
         strictEqual(flexcompletes, this.elems, 'should be chainable');
@@ -89,16 +89,7 @@
         });
     });
 
-    function testChildren_by_input_val(elems, searchString) {
-
-        var flexcompletes = elems.flexcomplete({
-                data: data,
-                matches: matches,
-                delay: 1
-            }),
-            count = data.reduce(function(previous, current, index, array) {
-                return previous + (matches(array[index], searchString) ? 1 : 0);
-            }, 0);
+    function test_by_input_val(elems, searchString, count) {
 
         elems.get().forEach(function(item) {
 
@@ -115,7 +106,9 @@
 
                     var children = instance.parentEl.find('.flexcomplete-line');
 
-                    equal(children.length, count, "There should be at least one result");
+                    if (typeof count !== 'undefined') {
+                        equal(children.length, count, "There should be at least one result");
+                    }
 
                     children.get().forEach(function(child) {
                         ok(matches($(child).text(), searchString) === true);
@@ -126,20 +119,9 @@
                 }, 5);
             });
         });
-
-        strictEqual(flexcompletes, elems, 'should be chainable');
     }
 
-    function test_search_function(elems, searchString) {
-
-        var flexcompletes = elems.flexcomplete({
-                data: data,
-                matches: matches,
-                delay: 1
-            }),
-            count = data.reduce(function(previous, current, index, array) {
-                return previous + (matches(array[index], searchString) ? 1 : 0);
-            }, 0);
+    function test_search_function(elems, searchString, count) {
 
         elems.get().forEach(function(item) {
 
@@ -154,7 +136,9 @@
 
                         var children = instance.parentEl.find('.flexcomplete-line');
 
-                        equal(children.length, count, "There should be at least one result");
+                        if (typeof count !== 'undefined') {
+                            equal(children.length, count, "There should be at least one result");
+                        }
 
                         children.get().forEach(function(child) {
                             ok(matches($(child).text(), searchString) === true);
@@ -164,43 +148,11 @@
                     });
             });
         });
-
-        strictEqual(flexcompletes, elems, 'should be chainable');
     }
 
-    test('are children being filled correctly (input value) [unique element]', function() {
+    function test_select_function(elems, searchString) {
 
-        testChildren_by_input_val(this.elems, 'único');
-    });
-
-    test('are children being filled correctly (input value) [many elements]', function() {
-
-        testChildren_by_input_val(this.elems, 'thiago');
-    });
-
-    test('are children being filled correctly search function [unique element]', function() {
-
-        test_search_function(this.elems, 'único');
-    });
-
-    test('are children being filled correctly search function [many elements]', function() {
-
-        test_search_function(this.elems, 'thiago');
-    });
-
-    test('are children being filled correctly select function [many elements]', function() {
-
-        var flexcompletes = this.elems.flexcomplete({
-                data: data,
-                matches: matches,
-                delay: 1
-            }),
-            searchString = "an",
-            count = data.reduce(function(previous, current, index, array) {
-                return previous + (matches(array[index], searchString) ? 1 : 0);
-            }, 0);
-
-        this.elems.get().forEach(function(item) {
+        elems.get().forEach(function(item) {
 
             var instance = $(item).data(pInstance);
 
@@ -222,7 +174,102 @@
                     });
             });
         });
+    }
 
+    test('STATIC DATA - are children being filled correctly (input value) [unique element]', function() {
+
+        var searchString = 'único',
+            flexcompletes = this.elems.flexcomplete({
+                data: this.data,
+                matches: matches,
+                delay: 1
+            }),
+            count = this.data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index], searchString) ? 1 : 0);
+            }, 0);
+
+        test_by_input_val(this.elems, searchString, count);
+
+        strictEqual(flexcompletes, this.elems, 'should be chainable');
+    });
+
+    test('STATIC DATA - are children being filled correctly (input value) [many elements]', function() {
+
+        var searchString = 'thiago',
+            flexcompletes = this.elems.flexcomplete({
+                data: this.data,
+                matches: matches,
+                delay: 1
+            }),
+            count = this.data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index], searchString) ? 1 : 0);
+            }, 0);
+
+        test_by_input_val(this.elems, searchString, count);
+
+        strictEqual(flexcompletes, this.elems, 'should be chainable');
+    });
+
+    test('STATIC DATA - are children being filled correctly search function [unique element]', function() {
+
+        var searchString = 'único',
+            flexcompletes = this.elems.flexcomplete({
+                data: this.data,
+                matches: matches,
+                delay: 1
+            }),
+            count = this.data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index], searchString) ? 1 : 0);
+            }, 0);
+
+        test_search_function(this.elems, searchString, count);
+
+        strictEqual(flexcompletes, this.elems, 'should be chainable');
+    });
+
+    test('STATIC DATA - are children being filled correctly search function [many elements]', function() {
+
+        var searchString = 'thiago',
+            flexcompletes = this.elems.flexcomplete({
+                data: this.data,
+                matches: matches,
+                delay: 1
+            }),
+            count = this.data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index], searchString) ? 1 : 0);
+            }, 0);
+
+        test_search_function(this.elems, searchString, count);
+
+        strictEqual(flexcompletes, this.elems, 'should be chainable');
+    });
+
+    test('STATIC DATA - are children being filled correctly select function [many elements]', function() {
+
+        var searchString = "an",
+            flexcompletes = this.elems.flexcomplete({
+                data: this.data,
+                matches: matches,
+                delay: 1
+            }),
+            count = this.data.reduce(function(previous, current, index, array) {
+                return previous + (matches(array[index], searchString) ? 1 : 0);
+            }, 0);
+
+        test_select_function(this.elems, searchString, count);
+        strictEqual(flexcompletes, this.elems, 'should be chainable');
+    });
+
+    test('DYNAMIC DATA - are children being filled correctly select function [many elements]', function() {
+
+        var searchString = "an",
+            flexcompletes = this.elems.flexcomplete({
+                url: 'http://localhost:3000/data/test1',
+                matches: matches,
+                delay: 1
+            });
+
+        test_select_function(this.elems, searchString);
         strictEqual(flexcompletes, this.elems, 'should be chainable');
     });
 
