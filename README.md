@@ -14,8 +14,9 @@ In your web page:
 <script src="jquery.js"></script>
 <script src="dist/flexcomplete.min.js"></script>
 <script>
-jQuery(function($) {
-  $.flexcomplete({
+$(function() {
+
+  $('#myInput').flexcomplete({
         url: 'http://localhost:8080/search', // <-- your_search_url_here
         onSelect: function(value, input) {
             input.value = value;
