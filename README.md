@@ -150,6 +150,25 @@ Change to your project's root directory.
 bower install flexcomplete
 ```
 
+### CDN
+
+CDN versions of Flexcomplete are available at:
+
+With the GitCDN.xyz CDN, you will not need to download local copies of the distribution files. Instead
+simply reference the CDN urls to easily use those remote library files. This is especially useful
+when using online tools such as [CodePen](http://codepen.io/), [Plunkr](http://plnkr.co/), or [JSFiddle](http://jsfiddle.net/).
+
+```html
+  <head>
+  </head>
+  <body>
+    <!-- Flexcomplete available via GitCDN.xyz -->
+    <script src="https://gitcdn.xyz/repo/thiagoh/flexcomplete/0.4.0/dist/jquery.flexcomplete.js"></script>
+    <!-- Flexcomplete minified version available via GitCDN.xyz -->
+    <script src="https://gitcdn.xyz/repo/thiagoh/flexcomplete/0.4.0/dist/jquery.flexcomplete.min.js"></script>
+  </body>
+```
+
 ## Release History
 
 * 0.4.0 beta release
