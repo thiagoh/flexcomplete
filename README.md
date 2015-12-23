@@ -130,6 +130,27 @@ autoReplacing: false
 ## Examples
 To see more examples of how to use Flexcomplete please check the demo directory.
 
+## Building
+Developers can easily build Flexcomplete using NPM.
+
+### NPM
+
+For the developers interested in building Flexcomplete:
+```
+npm install
+```
+
+### Bower
+
+For developers not interested in building the Flexcomplete library... use bower to install and use the Flexcomplete distribution files.
+
+Change to your project's root directory.
+```
+# To get the latest stable version, use Bower from the command line.
+bower install flexcomplete
+```
+
 ## Release History
 
+* 0.4.0 beta release
 * 0.1.0 first release

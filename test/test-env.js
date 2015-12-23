@@ -9,7 +9,7 @@
             _ = require('underscore'),
             fs = require('fs'),
             app = express(),
-            data1Path = "/data/super-heroes",
+            superHeroesPath = "/data/super-heroes",
             readline = require('readline'),
             superHeroes = [];
 
@@ -40,7 +40,7 @@
                 next();
             });
 
-            app.get(data1Path, function(req, res) {
+            app.get(superHeroesPath, function(req, res) {
 
                 var result = '',
                     searchQuery = (req.query.q || '').trim().toLowerCase();
