@@ -52,9 +52,9 @@ $('#myObject').flexcomplete('select');
 
 _comming soon_
 ```js
-$('#myObject').flexcomplete('extend');
+$('#myObject').flexcomplete('extend', settings);
 // or
-$('#myObject').flexcomplete('options');
+$('#myObject').flexcomplete('options', settings);
 ```
 
 _comming soon_
@@ -66,6 +66,7 @@ $('#myObject').flexcomplete('unload');
 
 _comming soon_
 ```js
+var data = [];
 $('#myObject').flexcomplete('staticData', data);
 // or
 $('#myObject').flexcomplete('sdata', data);
@@ -119,7 +120,13 @@ selectIfOneResult: false
 
 // any extra parameters you want to send to the server
 // can be an object or a function that returns an object
-extraParams: {} | function(instance){
+params: {} | function(instance){
+    return {};
+}
+
+// any headers you want to send to the server
+// can be an object or a function that returns an object
+headers: {} | function(instance){
     return {};
 }
 
