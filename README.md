@@ -29,15 +29,10 @@ $(function() {
 
 ## API
 
+*search* - search for a query `searchQuery` and shows the results
 
-_comming soon_
 ```js
 $('#myObject').flexcomplete('search', searchQuery);
-```
-
-_comming soon_
-```js
-$('#myObject').flexcomplete('open');
 ```
 
 _comming soon_
