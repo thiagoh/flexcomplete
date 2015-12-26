@@ -35,14 +35,14 @@ $(function() {
 $('#myObject').flexcomplete('search', searchQuery);
 ```
 
-_comming soon_
+*close* - close the results box
 ```js
 $('#myObject').flexcomplete('close');
 ```
 
-_comming soon_
+*select* - select the resulted by `index`
 ```js
-$('#myObject').flexcomplete('select');
+$('#myObject').flexcomplete('select', index);
 ```
 
 _comming soon_
