@@ -29,18 +29,18 @@ $(function() {
 
 ## API
 
-*search* - search for a query `searchQuery` and shows the results
+**search** - search for a query `searchQuery` and shows the results
 
 ```js
 $('#myObject').flexcomplete('search', searchQuery);
 ```
 
-*close* - close the results box
+**close** - close the results box
 ```js
 $('#myObject').flexcomplete('close');
 ```
 
-*select* - select the resulted by `index`
+**select** - select the resulted by `index`
 ```js
 $('#myObject').flexcomplete('select', index);
 ```
