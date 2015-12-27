@@ -45,14 +45,14 @@ $('#myObject').flexcomplete('close');
 $('#myObject').flexcomplete('select', index);
 ```
 
-_comming soon_
+**extend**|**options** - config the Flexcomplete default options
 ```js
 $('#myObject').flexcomplete('extend', settings);
 // or
 $('#myObject').flexcomplete('options', settings);
 ```
 
-_comming soon_
+**destroy**|**unload** - destroys the Flexcomplete instance
 ```js
 $('#myObject').flexcomplete('destroy');
 // or
