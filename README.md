@@ -59,12 +59,10 @@ $('#myObject').flexcomplete('destroy');
 $('#myObject').flexcomplete('unload');
 ```
 
-_comming soon_
+**staticData** - set the static data dynamicallystaticData
 ```js
 var data = [];
 $('#myObject').flexcomplete('staticData', data);
-// or
-$('#myObject').flexcomplete('sdata', data);
 ```
 
 To change flexcomplete behaviour globally you must override the `$.flexcomplete.options` object. See below the option keys, their default values and their description.
