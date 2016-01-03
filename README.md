@@ -59,9 +59,9 @@ $('#myObject').flexcomplete('destroy');
 $('#myObject').flexcomplete('unload');
 ```
 
-**staticData** - set the static data dynamicallystaticData
+**staticData** - set the static data dynamically
 ```js
-var data = [];
+var data = ['foo', 'bar', 'baz'];
 $('#myObject').flexcomplete('staticData', data);
 ```
 
