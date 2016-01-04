@@ -47,6 +47,10 @@ $('#myObject').flexcomplete('select', index);
 
 **extend**|**options** - config the Flexcomplete default options
 ```js
+// sets the default delay to 500ms
+var settings = {
+  delay: 500
+};
 $('#myObject').flexcomplete('extend', settings);
 // or
 $('#myObject').flexcomplete('options', settings);
