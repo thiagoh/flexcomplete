@@ -132,7 +132,7 @@ autoReplacing: false
 ```
 
 ## Examples
-To see more examples of how to use Flexcomplete please check the demo directory.
+To see more examples of how to use Flexcomplete please check the [demo directory](https://github.com/thiagoh/flexcomplete/tree/master/demo).
 
 ## Building
 Developers can easily build Flexcomplete using NPM.
