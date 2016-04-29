@@ -1,3 +1,10 @@
+[![](https://img.shields.io/travis/thiagoh/flexcomplete.svg)]((https://github.com/thiagoh/flexcomplete/releases/latest))
+[![view on npm](http://img.shields.io/npm/v/flexcomplete.svg)](https://www.npmjs.org/package/flexcomplete)
+[![view on github](https://img.shields.io/node/v/flexcomplete.svg)](https://github.com/thiagoh/flexcomplete)
+[![npm](https://img.shields.io/npm/l/flexcomplete.svg?style=flat-square)](https://www.npmjs.org/package/flexcomplete)
+[![npm module downloads](https://img.shields.io/npm/dt/flexcomplete.svg)](https://www.npmjs.org/package/flexcomplete)
+
+<a name="module_flexcomplete"></a>
 # Flexcomplete
 
 A flexible autocomplete plugin for jQuery. It works with online and offline data.
