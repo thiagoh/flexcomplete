@@ -1,5 +1,6 @@
 {
   "name": "flexcomplete",
+  "description": "A flexible autocomplete plugin for jQuery",
   "repository": {
     "type": "git",
     "url": "git://github.com/thiagoh/flexcomplete.git"
