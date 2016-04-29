@@ -4,7 +4,6 @@
 [![npm](https://img.shields.io/npm/l/flexcomplete.svg?style=flat-square)](https://www.npmjs.org/package/flexcomplete)
 [![npm module downloads](https://img.shields.io/npm/dt/flexcomplete.svg)](https://www.npmjs.org/package/flexcomplete)
 
-<a name="module_flexcomplete"></a>
 # Flexcomplete
 
 A flexible autocomplete plugin for jQuery. It works with online and offline data.
