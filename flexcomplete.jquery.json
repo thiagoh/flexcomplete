@@ -2,7 +2,7 @@
   "name": "flexcomplete",
   "title": "Flexcomplete",
   "description": "A flexible autocomplete plugin for jQuery",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "homepage": "https://github.com/thiagoh/flexcomplete",
   "author": {
     "name": "Thiago Andrade",
