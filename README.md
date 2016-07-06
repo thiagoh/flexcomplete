@@ -11,7 +11,7 @@
 A flexible autocomplete plugin for jQuery. It works with online and offline data.
 
 ## Getting Started
-Download the [production version][min] or the [development version][max].
+You can download the [production version][min] or the [development version][max].
 
 [min]: https://raw.github.com/thiago/flexcomplete/master/dist/flexcomplete.min.js
 [max]: https://raw.github.com/thiago/flexcomplete/master/dist/flexcomplete.js
